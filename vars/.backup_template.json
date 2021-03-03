@@ -1,0 +1,12 @@
+{
+    "restic": "",
+    "postgresDockerContainerName": "",
+    "postgresUser": "",
+    "postgresPw": "",
+    "postgresDb": "",
+    "serverDockerContainerName": "",
+    "emailFrom": "",
+    "emailTo": "",
+    "mailJetPublic": "",
+    "mailJetPrivate": ""
+}

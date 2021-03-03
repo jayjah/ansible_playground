@@ -10,6 +10,7 @@
 vars/hosts
 vars/default.yml
 vars/settings.yml
+.backup.json
 
 # os
 .DS_Store
