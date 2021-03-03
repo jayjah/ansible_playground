@@ -15,11 +15,10 @@
       become: true
 
     - name: copy backup application to remote host
-      group: docker
-      decrypt: no
-      remote_src: yes
-      src: /root/home/scripts/backup/backup_runtime
-      dest: /root/home/backup_runtime
+      copy:
+        src: /root/home/scripts/backup/backup_runtime.sh
+        dest: /tmp/backup_runtime.sh
+        group: restic
 
     - name: init restic
       shell: "restic init -r rest:{{ repo_url }}"

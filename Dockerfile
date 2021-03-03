@@ -6,10 +6,10 @@ FROM google/dart:2.10.5 as dartimage
 RUN apt -y update && apt -y install git make gcc zip gnupg2 procps curl wget
 # copy ansible project, it gets automatically copied into next image
 COPY ./ /root/home/data
-# create backup binary
+# create backup binary, will be used as cron job
 WORKDIR /root/home/data/scripts/backup
 RUN git clone https://github.com/jayjah/backder.git
-RUN cd backder && git checkout master && git pull && pub get && /usr/lib/dart/bin/dart compile exe bin/main.dart -o ../backup_runtime
+RUN cd backder && git checkout master && git pull && pub get && /usr/lib/dart/bin/dart compile exe bin/main.dart -o ../backup_runtime.sh
 
 # ubuntu base image with backup binary
 FROM ubuntu:20.04 as baseimage

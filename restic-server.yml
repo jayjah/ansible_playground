@@ -30,13 +30,13 @@
         state: started
         recreate: false
         restart: yes
+        pull: yes
         restart_policy: always
+        #network_mode: host
         published_ports: 
           - "{{ restic_port }}:8000"
         volumes:
           - /tmp/backups:/data
-        networks:
-          - name: "{{ default_server_network }}"
         output_logs: yes
         log_driver: json-file
         log_options:
@@ -44,7 +44,7 @@
           max-file: '3'
           labels: restic
         env:
-          OPTIONS: "--private-repos --max-size 6500000000  --path /data"
+          OPTIONS: "--private-repos --max-size 6500000000  --path /data" # 6.5gb
 
     - name: create users in restic server itself for each project
       shell: "docker exec -it restic_server create_user {{ item.name }} {{ item.password }}"
