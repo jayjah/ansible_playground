@@ -1,0 +1,60 @@
+---
+- name: Ensure sudo group is present
+  group:
+    name: sudo
+    state: present
+
+- name: ensure restic group is present
+  group:
+    name: restic
+    state: present
+
+- name: ensure docker group is present
+  group:
+    name: docker
+    state: present
+
+- name: Ensure sudo group has sudo privileges
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: "^%sudo"
+    line: "%sudo ALL=(ALL:ALL) ALL"
+    validate: "/usr/sbin/visudo -cf %s"
+    
+- name: Disable password for sudo command
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: "^%sudo"
+    line: "%sudo ALL=(ALL:ALL) NOPASSWD:ALL"
+    validate: "/usr/sbin/visudo -cf %s"
+
+- name: Create default user
+  user:
+    name: "{{ username }}"
+    groups: sudo, docker, restic
+    password: "{{ password }}"
+    shell: /bin/bash
+    update_password: always
+    state: present
+
+- name: Add authorized server key
+  authorized_key:
+    user: "{{ username }}"
+    key: "{{ lookup('file', './public_server_key') }}"
+    
+- name: Add authorized username key
+  authorized_key:
+    user: "{{ username }}"
+    key: "{{ lookup('file', './public_user_key') }}"
+
+- name: Add authorized username key to root user
+  authorized_key:
+    user: root
+    key: "{{ lookup('file', './public_user_key') }}"
+
+- name: Add authorized server key to root user
+  authorized_key:
+    user: root
+    key: "{{ lookup('file', './public_server_key') }}"

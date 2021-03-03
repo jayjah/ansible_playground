@@ -1,0 +1,30 @@
+---
+- name: Add Docker GPG apt Key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker Repository
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu focal stable
+    state: present
+
+- name: Install docker module for python
+  pip: name={{ item }}
+  loop: [ 'docker', 'passlib' ]
+  
+- name: Install docker
+  apt: name={{ item }} state=latest update_cache=yes
+  loop: [ 'docker-ce', 'docker-ce-cli', 'containerd.io', 'containerd', 'docker-compose', 'docker.io' ]
+
+- name: Start docker system service, in all cases, also issue daemon-reload to pick up config changes
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    enabled: yes
+    masked: no
+    name: docker
+  ignore_errors: yes
+
+- name: Start docker service
+  service: name=docker state=started

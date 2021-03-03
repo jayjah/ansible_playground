@@ -1,0 +1,42 @@
+- name: Show Hetzner server info
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  user: root
+  vars_files:
+    - vars/default.yml
+  tasks:
+    - name: get hcloud datacenter info
+      hcloud_datacenter_info:
+      register: output
+    - name: show datacenter info
+      debug:
+        var: output
+    - name: get hcloud floating ip
+      hcloud_floating_ip_info:
+      register: output
+    - name: show floating ip
+      debug:
+        var: output
+    - name: get hcloud sshkey info
+      hcloud_ssh_key_info:
+      register: output
+    - name: show sshkey info
+      debug:
+        var: output.hcloud_ssh_key_info
+        
+    - name: get all hcloud Hetzner servers
+      shell: hcloud server list
+      register: serverlist
+      args:
+        executable: /bin/bash
+    - name: show sshkey info
+      debug: var=serverlist.stdout_lines
+
+    - name: get hcloud server infos from private-jayjah.eu
+      hcloud_server_info:
+        name: private-jayjah.eu
+      register: output2
+    - name: show private-jayjah.eu
+      debug:
+        var: output2.hcloud_server_info

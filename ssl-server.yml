@@ -1,0 +1,79 @@
+---
+- name: create ssl certificates
+  hosts: letsencrypt
+  become: true
+  gather_facts: false
+  user: root
+  pre_tasks:
+    - raw: apt install -y python-simplejson
+
+  tasks:
+    - name: Create domain string 
+      shell: "echo '{{ domain_names | join(' ') }} '"
+      register: domains_without_prefix
+
+    - name: Create domain string with -d parameter
+      shell: "echo '-d {{ domain_names | join(' -d ') }}'"
+      register: domains
+
+    - debug:
+        msg: "Domain string with -d prefix: {{ domains.stdout }}"
+
+    - debug:
+        msg: "Domain string: {{ domains_without_prefix.stdout }}"
+
+    - name: Upgrade system
+      apt: upgrade=dist update_cache=yes
+
+    - name: Install nginx
+      apt: name=nginx state=latest
+
+    - name: install letsencrypt
+      apt: name=letsencrypt state=latest
+
+    - name: create letsencrypt directory
+      file: name=/var/www/letsencrypt state=directory
+
+    - name: Remove default nginx config
+      file: name=/etc/nginx/sites-enabled/default state=absent
+
+    - name: Install system nginx config
+      template:
+        src: templates/nginx.conf
+        dest: /etc/nginx/nginx.conf
+
+    - name: Install nginx site for letsencrypt requests
+      template:
+        src: templates/nginx-http.j2
+        dest: /etc/nginx/sites-enabled/http
+
+    - name: Create folders for each domain
+      shell: "echo '-d {{ domain_names | join(' -d ') }}'"
+      args:
+        creates: "/etc/letsencrypt/live/{{ item }}"
+      loop: "{{ domain_names }}"
+
+    - name: Reload nginx to activate letsencrypt site
+      service: name=nginx state=restarted
+
+    - name: Create letsencrypt certificate
+      shell: "letsencrypt certonly -n --webroot -w /var/www/letsencrypt -m {{ letsencrypt_email }} --agree-tos {{ domains.stdout }}"
+
+    - name: Generate dhparams
+      shell: openssl dhparam -out /etc/nginx/dhparams.pem 2048
+      args:
+        creates: /etc/nginx/dhparams.pem
+
+    - name: Install nginx site for specified site
+      template:
+        src: templates/nginx-le.j2
+        dest: /etc/nginx/sites-enabled/le
+
+    - name: Reload nginx to activate specified site
+      service: name=nginx state=restarted
+
+    - name: Add letsencrypt cronjob for cert renewal
+      cron:
+        name: letsencrypt_renewal
+        special_time: weekly
+        job: letsencrypt --renew certonly -n --webroot -w /var/www/letsencrypt -m {{ letsencrypt_email }} --agree-tos {{ domains.stdout }} && service nginx reload

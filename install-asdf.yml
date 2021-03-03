@@ -1,0 +1,56 @@
+- name: Install dart language
+  hosts: servers
+  gather_facts: false
+  vars_files:
+    - vars/default.yml
+  user: root
+  tasks:
+    #- name: Check if asdf exist
+    #  stat:
+    #    path: "/home/{{ username }}/.asdf/"
+    #  register: stat_result
+              
+    #- name: Clone asdf
+    #  git: repo=https://github.com/asdf-vm/asdf.git version=master dest=/home/{{ username }}/.asdf
+    #  when: stat_result.stat.exists == False
+    #  ignore_errors: yes
+      
+    #- name: Install asdf
+    #  shell:
+    #    chdir: "/home/{{ username }}/.asdf"
+    #    cmd: "git checkout $(git describe --abbrev=0 --tags)"
+    #  args:
+    #    executable: /bin/bash
+        
+    #- name: Ensure asdf is in bashrc
+    #  lineinfile:
+    #    path:  "/home/{{ username }}/.bashrc"
+    #    regexp: "^. $HOME/.asdf"
+    #    state: present
+    #    line: ". $HOME/.asdf/asdf.sh"
+
+    #- name: Ensure asdf is in profile
+    #  lineinfile:
+    #    path:  "/home/{{ username }}/.profile"
+    #   regexp: "^. $HOME/.asdf"
+    #    state: present
+    #    line: ". $HOME/.asdf/asdf.sh"
+
+    #- name: Give permission to asdf
+    # file:
+    #    path: "/home/{{ username }}/.asdf"
+    #    owner: "{{ username }}"
+    #    group: sudo
+    #    mode: a+x
+
+    #- name: Reload bashrc && profile
+    #  shell: "source /home/{{ username }}/.bashrc && source /home/{{ username }}/.profile"
+    #  args:
+    #     executable: /bin/bash
+    #  become: true
+        
+    #- name: Update asdf and install dart
+    #  shell: "asdf update && asdf plugin add dart && asdf install dart 2.10.5 && asdf reshim"
+    #  become: false
+    #  ignore_errors: yes
+

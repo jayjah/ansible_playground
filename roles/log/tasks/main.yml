@@ -1,0 +1,14 @@
+---
+- name: clear logs
+  shell: truncate -s 0 /var/log/*log
+  args:
+    executable: /bin/bash
+  become: true
+
+- name: clear shell history
+  shell: cat /dev/null > ~/.bash_history && history -c
+  become: true
+
+# todo clear docker logs -> need to identify log files, which should be placed in /etc/docker/
+#- name: clear docker logs
+#  shell: truncate -s 0 /etc/docker/daemon.json*

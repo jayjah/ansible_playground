@@ -1,0 +1,23 @@
+---
+- name: Start postgres db container
+  docker_container:
+    name: "{{ item.container_name }}"
+    image: "postgres:10"
+    state: started
+    recreate: false
+    restart: false
+    restart_policy: always
+    published_ports: 
+      - "5432:5432"
+    output_logs: yes
+    log_driver: json-file
+    log_options:
+      max-size: 10m
+      labels: postgres
+      max-file: '3'
+    env:
+      POSTGRES_DB: "{{ item.db_name }}"
+      POSTGRES_PASSWORD: "{{ item.db_password }}"
+      POSTGRES_USER: "{{ item.db_user }}"
+  loop: "{{ postgres_db_server_list }}"
+  when: enable_postgres == True

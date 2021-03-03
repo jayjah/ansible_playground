@@ -1,0 +1,28 @@
+---
+- name: Create and run restic client
+  hosts: resticclient
+  gather_facts: false
+  user: "{{ username }}"
+  vars_files:
+    - vars/default.yml
+  tasks:
+    - name: install restic
+      apt: name=restic state=latest update_cache=yes
+      become: true
+
+    - name: update restic
+      shell: restic self-update
+      become: true
+
+    - name: copy backup application to remote host
+      group: docker
+      decrypt: no
+      remote_src: yes
+      src: /root/home/scripts/backup/backup_runtime
+      dest: /root/home/backup_runtime
+
+    - name: init restic
+      shell: "restic init -r rest:{{ repo_url }}"
+      become: true
+      environment:
+        RESTIC_PASSWORD: "{{ restic_client_password }}"

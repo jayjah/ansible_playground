@@ -1,0 +1,20 @@
+---
+- name: Setting up server
+  hosts: servers
+  gather_facts: false
+  become: true
+  become_method: sudo
+  user: root
+  vars_files:
+    - vars/default.yml
+    - vars/settings.yml
+  roles:
+    - common
+    - ufw
+    - user
+    - ssh
+    - dart
+    - docker
+    - postgres_db
+    - redis_db
+    - log

@@ -1,0 +1,11 @@
+username:
+password:
+enable_redis: False
+permit_root_login: False
+ssh_key_name:
+default_server_network:
+postgres_version: 1
+create_server_list:
+- { name: '', default_server_type: '', default_os: '', default_server_location: '', create_server_backups: '' }
+postgres_db_server_list:
+- { container_name: 'db', db_name: 'db', db_password: 'db', db_user: 'db' }

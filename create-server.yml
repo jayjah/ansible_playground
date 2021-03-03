@@ -1,0 +1,26 @@
+---
+- name: create Hetzner servers
+  hosts: localhost
+  connection: local
+  user: root
+  vars_files:
+    - vars/default.yml
+  tasks:
+    - name: create-server
+      hcloud_server:
+        name: "{{ item.name }}"
+        server_type: "{{ item.default_server_type }}"
+        image: "{{ item.default_os }}"
+        location: "{{ item.default_server_location }}"
+        backups: "{{ item.create_server_backups }}"
+        ssh_keys:
+          - "{{ ssh_key_name }}" # own ssh key
+          - ansible-server # ansible-server has an own ssh key
+        state: present # Der Server soll erstellt werden - mit absent kann Server automatisch gelöscht werden!
+      loop: "{{ create_server_list }}"
+    - name: add-server-network
+      hcloud_server_network:
+        network: "{{ default_server_network }}"
+        server: "{{ item.name }}"
+        state: present
+      loop: "{{ create_server_list }}"

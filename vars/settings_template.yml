@@ -1,0 +1,4 @@
+enable_redis: False
+permit_root_login: False
+enable_postgres: True
+postgres_version: 10

@@ -1,0 +1,23 @@
+# Created by https://www.toptal.com/developers/gitignore/api/ansible
+# Edit at https://www.toptal.com/developers/gitignore?templates=ansible
+
+### Ansible ###
+*.retry
+
+# End of https://www.toptal.com/developers/gitignore/api/ansible
+
+# vars
+vars/hosts
+vars/default.yml
+vars/settings.yml
+
+# os
+.DS_Store
+
+# ide
+workspace.code-workspace
+
+# ssh
+id_rsa.pem
+public_server_key
+public_user_key
