@@ -16,6 +16,7 @@ vars/settings.yml
 
 # ide
 workspace.code-workspace
+.idea/
 
 # ssh
 id_rsa.pem

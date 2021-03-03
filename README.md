@@ -1,5 +1,5 @@
-# Ansible Workspace
-    Automates server management with (Ansible)[https://www.ansible.com/].
+# [Ansible](https://www.ansible.com/) Workspace
+    Automates server management
    
     From creating a server instance to maintaining 
     os, tools, softwares and their versions.
