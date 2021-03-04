@@ -17,8 +17,28 @@
     - name: copy backup application to remote host
       copy:
         src: /root/home/scripts/backup/backup_runtime.sh
-        dest: /tmp/backup_runtime.sh
-        group: restic
+        dest: "/home/{{ username }}/backup_runtime.sh"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0755"
+
+    - name: copy restic client config to remote host
+      copy:
+        src: /root/home/filesToRemote/.restic_backup.json
+        dest: "/home/{{ username }}/.restic_backup.json"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: "0755"
+
+    - name: run backder prepartion script
+      shell: "/home/{{ username }}/backup_runtime.sh prepare --path /home/{{ username }}/.restic_backup.json"
+      args:
+        executable: /bin/bash
+
+    - name: remove restic client config
+      file:
+        path: "/home/{{ username }}/.backup.json"
+        state: absent
 
     - name: init restic
       shell: "restic init -r rest:{{ repo_url }}"
