@@ -14,10 +14,17 @@
       shell: restic self-update
       become: true
 
+    - name: create backup directory
+      file:
+        state: directory
+        path: "/home/{{ username }}/backup"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+
     - name: copy backup application to remote host
       copy:
         src: /root/home/scripts/backup/backup_runtime.sh
-        dest: "/home/{{ username }}/backup_runtime.sh"
+        dest: "/home/{{ username }}/backup/backup_runtime.sh"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: "0755"
@@ -25,19 +32,37 @@
     - name: copy restic client config to remote host
       copy:
         src: /root/home/filesToRemote/.restic_backup.json
-        dest: "/home/{{ username }}/.restic_backup.json"
+        dest: "/home/{{ username }}/backup/.restic_backup.json"
         owner: "{{ username }}"
         group: "{{ username }}"
         mode: "0755"
 
-    - name: run backder prepartion script
-      shell: "/home/{{ username }}/backup_runtime.sh prepare --path /home/{{ username }}/.restic_backup.json"
+    - name: run backup application preparation script
+      shell:
+        chdir: "/home/{{ username }}/backup/"
+        cmd: ./backup_runtime.sh prepare --path .restic_backup.json
       args:
         executable: /bin/bash
+      become: no
+      become_user: "{{ username }}"
+
+    - name: ensure restic file has correct permissions (hive.hive)
+      file:
+        state: file
+        path: "/home/{{ username }}/backup/vaultbox.hive"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+
+    - name: ensure restic file has correct permissions (hive.lock)
+      file:
+        state: file
+        path: "/home/{{ username }}/backup/vaultbox.lock"
+        owner: "{{ username }}"
+        group: "{{ username }}"
 
     - name: remove restic client config
       file:
-        path: "/home/{{ username }}/.backup.json"
+        path: "/home/{{ username }}/backup/.restic_backup.json"
         state: absent
 
     - name: init restic

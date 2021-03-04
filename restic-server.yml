@@ -32,8 +32,7 @@
         restart: yes
         pull: yes
         restart_policy: always
-        #network_mode: host
-        published_ports: 
+        published_ports:
           - "{{ restic_port }}:8000"
         volumes:
           - /tmp/backups:/data
