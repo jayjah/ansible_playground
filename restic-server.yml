@@ -6,16 +6,15 @@
   vars_files:
     - vars/default.yml
   tasks:
-    # server should only be rechable in private network, NOT public
-    #- name: Allow restic server port
-    #  ufw: rule=allow port="{{ restic_port | string }}" proto=tcp
-    #  become: true
     - name: ensure restic backup directory exist
       file:
         state: directory
         path: /tmp/backups
         mode: "0755"
-
+    # server should only be rechable in private network, NOT public
+    #- name: Allow restic server port
+    #  ufw: rule=allow port="{{ restic_port | string }}" proto=tcp
+    #  become: true
     - name: Create for each repo an user for restic server to enable access
       htpasswd:
         path: /tmp/backups/.htpasswd
@@ -31,7 +30,7 @@
         recreate: false
         restart: yes
         pull: yes
-        restart_policy: always
+        restart_policy: unless-stopped
         published_ports:
           - "{{ restic_port }}:8000"
         volumes:
@@ -43,7 +42,7 @@
           max-file: '3'
           labels: restic
         env:
-          OPTIONS: "--private-repos --max-size 6500000000  --path /data" # 6.5gb
+          OPTIONS: "--private-repos --max-size 6500000000 --prometheus --path /data" # 6.5gb
 
     - name: create users in restic server itself for each project
       shell: "docker exec -it restic_server create_user {{ item.name }} {{ item.password }}"

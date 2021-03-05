@@ -17,4 +17,5 @@
     - docker
     - postgres_db
     - redis_db
+    #- metrics
     - log

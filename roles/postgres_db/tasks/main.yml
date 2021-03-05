@@ -1,14 +1,14 @@
 ---
 - name: Start postgres db container
   docker_container:
-    name: "{{ item.container_name }}"
-    image: "postgres:10"
+    name: "{{ postgres_container_name }}"
+    image: "postgres:{{ postgres_version }}"
     state: started
     recreate: false
     restart: false
-    restart_policy: always
+    restart_policy: unless-stopped
     published_ports: 
-      - "5432:5432"
+      - "{{ postgres_container_port }}:5432"
     output_logs: yes
     log_driver: json-file
     log_options:
@@ -16,8 +16,32 @@
       labels: postgres
       max-file: '3'
     env:
-      POSTGRES_DB: "{{ item.db_name }}"
-      POSTGRES_PASSWORD: "{{ item.db_password }}"
-      POSTGRES_USER: "{{ item.db_user }}"
-  loop: "{{ postgres_db_server_list }}"
+      POSTGRES_DB: "{{ postgres_db_name }}"
+      POSTGRES_PASSWORD: "{{ postgres_db_password }}"
+      POSTGRES_USER: "{{ postgres_db_user }}"
   when: enable_postgres == True
+
+- name: Start postgres metrics
+  docker_container:
+    name: postgres-exporter
+    image: quay.io/prometheuscommunity/postgres-exporter
+    state: started
+    recreate: false
+    restart: false
+    restart_policy: unless-stopped
+    published_ports:
+      - "{{ postgres_metrics_port }}:9187"
+    links:
+      - "{{ postgres_container_name }}:"
+    output_logs: yes
+    log_driver: json-file
+    log_options:
+      max-size: 10m
+      labels: postgres
+      max-file: '3'
+    env:
+      DATA_SOURCE_USER: "{{ postgres_db_user }}"
+      DATA_SOURCE_PASS: "{{ postgres_db_password }}"
+      DATA_SOURCE_URI: "{{ postgres_container_name }}:{{ postgres_container_port }}?sslmode=disable"
+      PG_auto-discover-databases: "true"
+  when: enable_postgres == True and enable_metrics == True

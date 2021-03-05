@@ -1,12 +1,13 @@
 ---
-# make it public available
+# NOT public
 # one redis server is used by multiple clients
-- name: Allow redis port
-  ufw: rule=allow port=6379 proto=tcp
-  when: enable_redis == True
+#- name: Allow redis port
+#  ufw: rule=allow port=6379 proto=tcp
+#  when: enable_redis == True
 
 # improve container creation with password to enable security on redis server, because its public available
 # improve container with max ram size to reduce container overhead
+# improve container with metrics
 - name: Start redis db container
   docker_container:
     name: "{{ item.container_name }}"
@@ -14,7 +15,7 @@
     state: started
     recreate: yes
     restart: yes
-    restart_policy: always
+    restart_policy: unless-stopped
     published_ports:
       - "6379:6379"
     output_logs: yes
