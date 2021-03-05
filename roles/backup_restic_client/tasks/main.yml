@@ -1,11 +1,6 @@
 ---
-- name: Create and run restic client
-  hosts: resticclient
-  gather_facts: false
-  user: "{{ username }}"
-  vars_files:
-    - vars/default.yml
-  tasks:
+- name: Installation and configuration of restic-client
+  block:
     - name: install restic
       apt: name=restic state=latest update_cache=yes
       become: true

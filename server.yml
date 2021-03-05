@@ -3,13 +3,12 @@
   hosts: servers
   gather_facts: false
   become: true
-  become_method: sudo
-  user: root
+  become_user: root
   vars_files:
     - vars/default.yml
     - vars/settings.yml
+    - vars/database_default.yml
   roles:
-    - common
     - ufw
     - user
     - ssh
@@ -17,5 +16,4 @@
     - docker
     - postgres_db
     - redis_db
-    #- metrics
     - log

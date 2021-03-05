@@ -1,0 +1,7 @@
+mailjet_public: "test"
+mailjet_private: "test"
+email_from: "backup_error@jayjah.eu"
+email_to: "markuskrebs93@gmail.com"
+restic_repos:
+  - { name: "orthofit", password: "test" }
+  - { name: "jayjah", password: "test" }

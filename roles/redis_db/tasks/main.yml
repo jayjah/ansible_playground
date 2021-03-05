@@ -17,7 +17,7 @@
     restart: yes
     restart_policy: unless-stopped
     published_ports:
-      - "6379:6379"
+      - "{{ redis_container_port }}:6379"
     output_logs: yes
     log_driver: json-file
     log_options:

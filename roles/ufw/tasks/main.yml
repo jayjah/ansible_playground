@@ -15,7 +15,7 @@
   ufw: rule=allow name=OpenSSH
 
 - name: Allow server port
-  ufw: "rule=allow port={{ server_port }} proto=tcp"
+  ufw: rule=allow port={{ server_port }} proto=tcp
     
 - name: Allow all access from subnet network to this host
   ufw:

@@ -1,0 +1,11 @@
+---
+- name: Create and run restic client
+  hosts: resticclients
+  gather_facts: false
+  become_user: root
+  vars_files:
+    - vars/default.yml
+    - vars/backup_default.yml
+    - vars/database_default.yml
+  roles:
+    - backup_restic_client

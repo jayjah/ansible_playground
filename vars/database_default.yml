@@ -1,0 +1,6 @@
+postgres_db_name: backenddb
+postgres_db_user: backenddb
+postgres_db_password: backenddb
+postgres_version: 10
+postgres_container_port: 5432
+postgres_container_name: backenddb

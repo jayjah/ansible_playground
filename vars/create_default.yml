@@ -1,0 +1,6 @@
+create_server_list:
+  - { name: 'orthofit', default_server_type: 'cx11', default_os: 'ubuntu-20.04', default_server_location: 'nbg1', create_server_backups: 'false' }
+  - { name: 'jayjah', default_server_type: 'cx21', default_os: 'ubuntu-20.04', default_server_location: 'nbg1', create_server_backups: 'false' }
+  - { name: 'metricsandbackups', default_server_type: 'cx11', default_os: 'ubuntu-20.04', default_server_location: 'nbg1', create_server_backups: 'false' }
+default_server_network: ev-network
+ssh_key_name: markuskrebs@Markuss-Air-2.fritz.box

@@ -1,0 +1,10 @@
+---
+- name: Create and run restic server
+  hosts: resticserver
+  gather_facts: false
+  become_user: root
+  vars_files:
+    - vars/default.yml
+    - vars/backup_default.yml
+  roles:
+    - backup_restic_server

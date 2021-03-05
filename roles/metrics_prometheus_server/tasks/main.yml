@@ -1,0 +1,3 @@
+---
+- debug:
+    msg: "Metrics server stuuff will come here..."

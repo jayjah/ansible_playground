@@ -1,0 +1,11 @@
+---
+- name: Prepare clients for collecting metrics information
+  hosts: servers
+  gather_facts: false
+  user: "{{ username }}"
+  vars_files:
+    - vars/default.yml
+    - vars/metrics_default.yml
+    - vars/database_default.yml
+  roles:
+    - metrics_prometheus_client

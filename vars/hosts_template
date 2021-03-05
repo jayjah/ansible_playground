@@ -1,5 +1,0 @@
-[servers]
-orthofit ansible_host=IP_ADDRESS ansible_connection=ssh ansible_ssh_private_key_file=./PATH_TO_PRIVATE_SERVER_SSH_KEY
-
-[letsencrypt]
-orthofit ansible_user=root letsencrypt_email=EMAIL@example domain_name=exmaple.com backend_ip_address=IP_ADDRESS

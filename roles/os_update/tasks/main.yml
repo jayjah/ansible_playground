@@ -1,0 +1,28 @@
+---
+- name: Update and upgrade
+  apt: force_apt_get=yes update_cache=yes upgrade=dist
+
+- name: Full upgrade
+  apt: force_apt_get=yes update_cache=yes upgrade=full
+
+- name: Checking for reboot
+  register: reboot_required_file
+  stat: path=/var/run/reboot-required get_md5=no
+
+- name: Reboot the box if needed
+  reboot:
+    msg: "Reboot initiated by Ansible for updates"
+    connect_timeout: 5
+    reboot_timeout: 300
+    pre_reboot_delay: 0
+    post_reboot_delay: 30
+    test_command: uptime
+  when: reboot_required_file.stat.exists
+
+- name: Install and update required packages
+  apt:  update_cache=yes name={{ item }} state=latest
+  loop: [ 'aptitude', 'git-core', 'git', 'ufw', 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools', 'apache2-utils', 'snap', 'python-simplejson']
+
+- name: Install python packages
+  pip: name={{ item }}
+  loop: [ 'docker', 'passlib' ]

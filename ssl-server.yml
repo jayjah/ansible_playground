@@ -4,8 +4,6 @@
   become: true
   gather_facts: false
   user: root
-  pre_tasks:
-    - raw: apt install -y python-simplejson
   tasks:
     - name: Create domain string 
       shell: "echo '{{ domain_names | join(' ') }} '"

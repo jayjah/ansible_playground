@@ -1,0 +1,3 @@
+redis_db_server_list:
+  - { container_name: 'redis_db', password: '' }
+redis_container_port: 6379

@@ -24,7 +24,6 @@
     - name: show sshkey info
       debug:
         var: output.hcloud_ssh_key_info
-        
     - name: get all hcloud Hetzner servers
       shell: hcloud server list
       register: serverlist
@@ -32,7 +31,6 @@
         executable: /bin/bash
     - name: show sshkey info
       debug: var=serverlist.stdout_lines
-
     - name: get hcloud server infos from private-jayjah.eu
       hcloud_server_info:
         name: private-jayjah.eu

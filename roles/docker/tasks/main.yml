@@ -8,10 +8,6 @@
   apt_repository:
     repo: deb https://download.docker.com/linux/ubuntu focal stable
     state: present
-
-- name: Install docker module for python
-  pip: name={{ item }}
-  loop: [ 'docker', 'passlib' ]
   
 - name: Install docker
   apt: name={{ item }} state=latest update_cache=yes
