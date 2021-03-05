@@ -4,7 +4,7 @@
     name: cadvisor
     image: gcr.io/cadvisor/cadvisor
     state: started
-    recreate: false
+    recreate: yes
     restart: false
     restart_policy: unless-stopped
     published_ports:
@@ -29,7 +29,7 @@
     name: node-exporter
     image: prom/node-exporter
     state: started
-    recreate: false
+    recreate: true
     restart: false
     restart_policy: unless-stopped
     pid: host
