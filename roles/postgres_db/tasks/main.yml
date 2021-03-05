@@ -37,7 +37,7 @@
     log_driver: json-file
     log_options:
       max-size: 10m
-      labels: postgres
+      labels: postgres-exporter
       max-file: '3'
     env:
       DATA_SOURCE_USER: "{{ postgres_db_user }}"

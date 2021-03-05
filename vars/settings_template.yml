@@ -9,5 +9,7 @@ postgres_db_user:
 postgres_db_password:
 postgres_container_port:
 postgres_metrics_port:
+server_container_name:
+server_port:
 cadvisor_metrics_port:
 node_metrics_port:
