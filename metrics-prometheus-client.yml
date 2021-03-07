@@ -5,6 +5,7 @@
   user: "{{ username }}"
   vars_files:
     - vars/default.yml
+    - vars/settings.yml
     - vars/metrics_default.yml
     - vars/database_default.yml
   roles:

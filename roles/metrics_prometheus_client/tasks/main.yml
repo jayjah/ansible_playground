@@ -5,7 +5,7 @@
     image: gcr.io/cadvisor/cadvisor
     state: started
     recreate: yes
-    restart: false
+    restart: yes
     restart_policy: unless-stopped
     published_ports:
       - "{{ cadvisor_metrics_port }}:8080"
@@ -21,18 +21,18 @@
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
       # to collect data from docker on macos host:
-      #- /var/run/docker.sock:/var/run/docker.sock:rw
+      - /var/run/docker.sock:/var/run/docker.sock:rw
 
 - name: Start node-exporter container (os metrics)
   docker_container:
     name: node-exporter
     image: prom/node-exporter
     state: started
-    recreate: true
-    restart: false
+    recreate: yes
+    restart: yes
     restart_policy: unless-stopped
-    pid: host
-    network_mode: host
+    pid_mode: host
+    #network_mode: host
     command: "--path.rootfs=/host"
     published_ports:
       - "{{ node_metrics_port }}:9100"
@@ -50,8 +50,8 @@
     name: postgres-exporter
     image: quay.io/prometheuscommunity/postgres-exporter
     state: started
-    recreate: false
-    restart: false
+    recreate: yes
+    restart: yes
     restart_policy: unless-stopped
     published_ports:
       - "{{ postgres_metrics_port }}:9187"

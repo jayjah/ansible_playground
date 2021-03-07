@@ -25,4 +25,4 @@
       labels: redis
       max-file: '3'
   loop: "{{ redis_db_server_list }}"
-  when: enable_redis == True
+  when: enable_redis == True and inventory_hostname != 'metricsandbackups'

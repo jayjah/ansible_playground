@@ -1,0 +1,56 @@
+version: '3.2'
+
+services:
+  prometheus:
+    image: prom/prometheus-linux-amd64:latest
+    expose:
+      - 9090
+    network_mode: bridge
+    ports:
+      - {{ prometheus_port }}:9090
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - prometheusdata:/prometheus
+      - ./prometheus.yaml:/etc/prometheus/prometheus.yml:ro
+    #links:
+    #  - "cadvisor:"
+    #  - "node-exporter:node-exporter"
+    #  - "restic_server:restic_server"
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    volumes:
+      - grafanadata:/var/lib/grafana
+      - ./dashboards:/dashboards
+      - ./grafana.ini:/etc/grafana/grafana.ini
+    expose:
+      - 3000
+    network_mode: bridge
+    ports:
+      - {{ grafana_port }}:3000
+    environment:
+      GF_USERS_DEFAULT_THEME: dark
+      GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-simple-json-datasource
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_SECURITY_ADMIN_PASSWORD: test
+      #GF_SERVER_DOMAIN=myrul.com
+      #GF_SMTP_ENABLED=true
+      #GF_SMTP_HOST=smtp.gmail.com:587
+      #GF_SMTP_USER=myadrress@gmail.com
+      #GF_SMTP_PASSWORD=mypassword
+      #GF_SMTP_FROM_ADDRESS=myaddress@gmail.com
+    depends_on:
+      - prometheus
+    links:
+      - "prometheus:prometheus"
+    restart: unless-stopped
+
+volumes:
+  prometheusdata:
+    driver: local
+  grafanadata:
+    driver: local
+

@@ -45,14 +45,14 @@ FROM prod-sources as prod-build
 RUN cd aqueduct && git checkout override_with_git && git pull && pub get && pub global activate --source path .
 # compile jayjah/server
 RUN cd dart_backend && /usr/lib/dart/bin/pub get --no-precompile && /usr/lib/dart/bin/pub global run aqueduct build && cp /dart_backend/dart_backend.aot /root/home
+# copy stuff from other images
+COPY --from=data /root/home/data /root/home/
 
 # dev build ::
 FROM baseimage as dev-build
 RUN echo "running DEV environment! jayjah/server won't be in the final image!"
 
+# :: final ::
 FROM ${APP_ENV}-build as final
-# copy stuff from other images
-COPY --from=data /root/home/data /root/home/
-
 RUN echo "Finished Docker Build! Build environment: ${APP_ENV}"
 WORKDIR /root/home/

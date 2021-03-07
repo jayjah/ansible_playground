@@ -1,3 +1,74 @@
 ---
-- debug:
-    msg: "Metrics server stuuff will come here..."
+#- name: Deny HTTPS
+#  ufw: rule=deny port=443 proto=tcp
+
+#- name: Deny HTTP
+#  ufw: rule=deny port=80 proto=tcp
+
+- name: Deny server port
+  ufw: rule=deny port='{{ server_port }}' proto=tcp
+
+- name: Allow prometheus port
+  ufw: rule=allow port='{{ prometheus_port }}' proto=tcp
+
+- name: Allow grafana port
+  ufw: rule=allow port='{{ grafana_port }}' proto=tcp
+
+- name: Create prometheus directory
+  file:
+      path: "/home/{{ username }}/prometheus"
+      state: directory
+      owner: "{{ username }}"
+      group: "{{ username }}"
+      mode: "0755"
+
+- name: Create prometheus/dashboards directory
+  file:
+      path: "/home/{{ username }}/prometheus/dashboards"
+      state: directory
+      owner: "{{ username }}"
+      group: "{{ username }}"
+      mode: "0755"
+
+- name: Create prometheus/prometheusdata directory
+  file:
+      path: "/home/{{ username }}/prometheus/prometheusdata"
+      state: directory
+      owner: "{{ username }}"
+      group: "{{ username }}"
+      mode: "0755"
+
+- name: Create prometheus/grafanadata directory
+  file:
+      path: "/home/{{ username }}/prometheus/grafanadata"
+      state: directory
+      owner: "{{ username }}"
+      group: "{{ username }}"
+      mode: "0755"
+
+- name: Install prometheus/grafana rest-server.json
+  copy:
+    src: templates/prometheus/dashboards/rest-server.json
+    dest: "/home/{{ username }}/prometheus/dashboards/rest-server.json"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: "0755"
+
+- name: Install grafana.ini file
+  template:
+      src: templates/prometheus/grafana.ini
+      dest: "/home/{{ username }}/prometheus/grafana.ini"
+
+- name: Install prometheus.yml file
+  template:
+      src: templates/prometheus/prometheus.yaml.j2
+      dest: "/home/{{ username }}/prometheus/prometheus.yaml"
+
+- name: Install docker-compose.yaml file
+  template:
+      src: templates/prometheus/docker-compose.yaml.j2
+      dest: "/home/{{ username }}/prometheus/docker-compose.yaml"
+
+- name: Create prometheus instance
+  docker_compose:
+    project_src: "/home/{{ username }}/prometheus/"

@@ -24,13 +24,13 @@
         group: "{{ username }}"
         mode: "0755"
 
-    - name: copy restic client config to remote host
-      copy:
-        src: /root/home/filesToRemote/.restic_backup.json
+    - name: install restic client config to remote host
+      template:
+        src: templates/.restic_backup.json.j2
         dest: "/home/{{ username }}/backup/.restic_backup.json"
-        owner: "{{ username }}"
-        group: "{{ username }}"
-        mode: "0755"
+        #owner: "{{ username }}"
+        #group: "{{ username }}"
+        #mode: "0755"
 
     - name: run backup application preparation script
       shell:
