@@ -5,6 +5,7 @@
   become_user: root
   vars_files:
     - vars/default.yml
+    - vars/settings.yml
     - vars/backup_default.yml
     - vars/database_default.yml
   roles:

@@ -2,8 +2,8 @@
 # options: [dev, prod] prod == with compiled dart libraries; dev == without compiled dart libraries
 ARG APP_ENV=dev
 
-# image to compile binaries
-FROM google/dart:2.10.5 as dartimage
+# image to compile library binaries
+FROM google/dart:2.12.0 as libraryimage
 # install dependencies
 RUN apt -y update && apt -y install git make gcc zip gnupg2 procps curl wget
 RUN mkdir /root/home && mkdir /root/home/data
@@ -11,6 +11,13 @@ WORKDIR /root/home
 # create backup binary, will be used as cron job
 RUN git clone https://github.com/jayjah/backder.git
 RUN cd backder && git checkout master && git pull && pub get && /usr/lib/dart/bin/dart compile exe bin/main.dart -o /root/backup_runtime.sh
+
+# image to compile binaries
+FROM google/dart:2.10.5 as prodimage
+# install dependencies
+RUN apt -y update && apt -y install git make gcc zip gnupg2 procps curl wget
+RUN mkdir /root/home && mkdir /root/home/data
+WORKDIR /root/home
 
 # ubuntu base image with backup binary
 FROM ubuntu:20.04 as baseimage
@@ -23,7 +30,7 @@ RUN mkdir /root/home && mkdir /root/home/data
 
 FROM baseimage as pre-prod-build
 # set dart && pub-cache to env
-COPY --from=dartimage /usr/lib/dart /usr/lib/dart
+COPY --from=prodimage /usr/lib/dart /usr/lib/dart
 ARG PATH="$PATH:/usr/lib/dart/bin:$PATH:/root/.pub-cache/bin"
 ENV PATH="$PATH:/usr/lib/dart/bin:$PATH:/root/.pub-cache/bin"
 # prepare ssh
@@ -50,6 +57,7 @@ RUN echo "running DEV environment! jayjah/server won't be in the final image!"
 # :: final ::
 FROM ${APP_ENV}-build as final
 RUN echo "Finished Docker Build! Build environment: ${APP_ENV}"
-# start ssh agent -> manually: eval "$(ssh-agent -s)" && ssh-add /root/home/id_rsa.pem
+COPY --from=libraryimage /root/backup_runtime.sh /root
+
 WORKDIR /root/home/
 

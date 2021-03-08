@@ -18,7 +18,7 @@
 
     - name: copy backup application to remote host
       copy:
-        src: /root/home/scripts/backup/backup_runtime.sh
+        src: /root/backup_runtime.sh
         dest: "/home/{{ username }}/backup/backup_runtime.sh"
         owner: "{{ username }}"
         group: "{{ username }}"
@@ -47,6 +47,7 @@
         path: "/home/{{ username }}/backup/vaultbox.hive"
         owner: "{{ username }}"
         group: "{{ username }}"
+        mode: "0755"
 
     - name: ensure restic file has correct permissions (hive.lock)
       file:
@@ -54,6 +55,7 @@
         path: "/home/{{ username }}/backup/vaultbox.lock"
         owner: "{{ username }}"
         group: "{{ username }}"
+        mode: "0755"
 
     - name: remove restic client config
       file:
@@ -65,3 +67,13 @@
       become: true
       environment:
         RESTIC_PASSWORD: "{{ restic_client_password }}"
+      ignore_errors: yes
+
+    - name: make backup
+      shell:
+        chdir: "/home/{{ username }}/backup/"
+        cmd: "./backup_runtime.sh make --name {{ restic_client_user }}"
+      args:
+        executable: /bin/bash
+      become: no
+      become_user: "{{ username }}"
