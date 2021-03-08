@@ -1,18 +1,33 @@
 ---
-#- name: Deny HTTPS
-#  ufw: rule=deny port=443 proto=tcp
+- name: Deny prometheus port
+  ufw: rule=deny port={{ prometheus_port }} proto=tcp
 
-#- name: Deny HTTP
-#  ufw: rule=deny port=80 proto=tcp
+- name: Deny grafana port
+  ufw: rule=deny port={{ grafana_port }} proto=tcp
 
-- name: Deny server port
-  ufw: rule=deny port='{{ server_port }}' proto=tcp
+- name: Allow incoming access to prometheus from port 22
+  ufw:
+    rule: allow
+    direction: in
+    proto: any
+    from_port: '22'
+    to_port: "{{ prometheus_port }}"
 
-- name: Allow prometheus port
-  ufw: rule=allow port='{{ prometheus_port }}' proto=tcp
+- name: Allow incoming access to prometheus from grafana port
+  ufw:
+    rule: allow
+    direction: in
+    proto: any
+    from_port: "{{ grafana_port }}"
+    to_port: "{{ prometheus_port }}"
 
-- name: Allow grafana port
-  ufw: rule=allow port='{{ grafana_port }}' proto=tcp
+- name: Allow incoming access to grafana from port 22
+  ufw:
+    rule: allow
+    direction: in
+    proto: any
+    from_port: '22'
+    to_port: "{{ grafana_port }}"
 
 - name: Create prometheus directory
   file:

@@ -68,4 +68,4 @@
       DATA_SOURCE_PASS: "{{ postgres_db_password }}"
       DATA_SOURCE_URI: "{{ postgres_container_name }}:{{ postgres_container_port }}?sslmode=disable"
       PG_auto-discover-databases: "true"
-  when: enable_postgres == True
+  when: enable_postgres == True and inventory_hostname != 'metricsandbackups'

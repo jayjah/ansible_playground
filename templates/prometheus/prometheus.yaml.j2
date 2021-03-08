@@ -1,6 +1,5 @@
 global:
   scrape_interval:     {{ scrape_interval }} # By default, scrape targets every 15 seconds.
-
   # Attach these labels to any time series or alerts when communicating with
   # external systems (federation, remote storage, Alertmanager).
   external_labels:
@@ -22,6 +21,9 @@ scrape_configs:
   - job_name: 'prometheus-restic'
     static_configs:
       - targets: ['localhost:{{ restic_port }}']
+    basic_auth:
+      username: {{ hostvars[groups['resticclients'][0]]['restic_client_user'] }}
+      password: {{ hostvars[groups['resticclients'][0]]['restic_client_password'] }}
 
   {% for item in groups['servers'] if hostvars[item]['name'] != 'metricsandbackups' -%}
   - job_name: '{{ hostvars[item]['name'] }}-cadvisor'

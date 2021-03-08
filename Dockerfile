@@ -1,9 +1,6 @@
 # syntax=docker/dockerfile:1.2
-# options: [dev, prod]
+# options: [dev, prod] prod == with compiled dart libraries; dev == without compiled dart libraries
 ARG APP_ENV=dev
-
-FROM scratch as data
-COPY ./ /root/home/data
 
 # image to compile binaries
 FROM google/dart:2.10.5 as dartimage
@@ -13,7 +10,7 @@ RUN mkdir /root/home && mkdir /root/home/data
 WORKDIR /root/home
 # create backup binary, will be used as cron job
 RUN git clone https://github.com/jayjah/backder.git
-RUN cd backder && git checkout master && git pull && pub get && /usr/lib/dart/bin/dart compile exe bin/main.dart -o /root/home/data/backup_runtime.sh
+RUN cd backder && git checkout master && git pull && pub get && /usr/lib/dart/bin/dart compile exe bin/main.dart -o /root/backup_runtime.sh
 
 # ubuntu base image with backup binary
 FROM ubuntu:20.04 as baseimage
@@ -44,9 +41,7 @@ FROM prod-sources as prod-build
 # install aqueduct
 RUN cd aqueduct && git checkout override_with_git && git pull && pub get && pub global activate --source path .
 # compile jayjah/server
-RUN cd dart_backend && /usr/lib/dart/bin/pub get --no-precompile && /usr/lib/dart/bin/pub global run aqueduct build && cp /dart_backend/dart_backend.aot /root/home
-# copy stuff from other images
-COPY --from=data /root/home/data /root/home/
+RUN cd dart_backend && /usr/lib/dart/bin/pub get --no-precompile && /usr/lib/dart/bin/pub global run aqueduct build && cp /dart_backend/dart_backend.aot /root
 
 # dev build ::
 FROM baseimage as dev-build
@@ -55,4 +50,6 @@ RUN echo "running DEV environment! jayjah/server won't be in the final image!"
 # :: final ::
 FROM ${APP_ENV}-build as final
 RUN echo "Finished Docker Build! Build environment: ${APP_ENV}"
+# start ssh agent -> manually: eval "$(ssh-agent -s)" && ssh-add /root/home/id_rsa.pem
 WORKDIR /root/home/
+

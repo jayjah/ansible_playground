@@ -6,8 +6,8 @@ services:
     expose:
       - 9090
     network_mode: host
-    ports:
-      - {{ prometheus_port }}:9090
+    #ports:
+    #  - {{ prometheus_port }}:9090
     command:
       - --config.file=/etc/prometheus/prometheus.yml
     volumes:
@@ -29,8 +29,8 @@ services:
     expose:
       - 3000
     network_mode: host
-    ports:
-      - {{ grafana_port }}:3000
+    #ports:
+    #  - {{ grafana_port }}:3000
     environment:
       GF_USERS_DEFAULT_THEME: dark
       GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-simple-json-datasource
@@ -44,8 +44,8 @@ services:
       #GF_SMTP_FROM_ADDRESS=myaddress@gmail.com
     depends_on:
       - prometheus
-    links:
-      - "prometheus:prometheus"
+    #links:
+    #  - "prometheus:prometheus"
     restart: unless-stopped
 
 volumes:
