@@ -12,21 +12,21 @@ scrape_configs:
       - targets: ['localhost:{{ prometheus_port }}']
   - job_name: 'prometheus-cadvisor'
     static_configs:
-      - targets: ['127.0.0.1:{{ cadvisor_metrics_port }}']
+      - targets: ['localhost:{{ cadvisor_metrics_port }}']
   - job_name: 'prometheus-docker'
     static_configs:
-      - targets: ['localhost:9323']
+      - targets: ['172.17.0.1:9323']
   - job_name: 'prometheus-node-exporter'
     static_configs:
-      - targets: ['127.0.0.1:{{ node_metrics_port }}']
+      - targets: ['localhost:{{ node_metrics_port }}']
   - job_name: 'prometheus-restic'
     static_configs:
-      - targets: ['127.0.0.1:{{ restic_port }}']
+      - targets: ['localhost:{{ restic_port }}']
 
   {% for item in groups['servers'] if hostvars[item]['name'] != 'metricsandbackups' -%}
   - job_name: '{{ hostvars[item]['name'] }}-cadvisor'
     static_configs:
-      - targets: [ '{{ hostvars[item]['ansible_host'] }}:{{ cadvisor_metrics_port }}' ]
+      - targets: [ '{{ hostvars[item]['network_ip'] }}:{{ cadvisor_metrics_port }}' ]
   {% endfor %}
   #- job_name: 'cadvisor'
   #  static_configs:
@@ -35,7 +35,7 @@ scrape_configs:
   {% for item in groups['servers'] if hostvars[item]['name'] != 'metricsandbackups' -%}
   - job_name: '{{ hostvars[item]['name'] }}-node-exporter'
     static_configs:
-      - targets: [ '{{ hostvars[item]['ansible_host'] }}:{{ node_metrics_port }}' ]
+      - targets: [ '{{ hostvars[item]['network_ip'] }}:{{ node_metrics_port }}' ]
   {% endfor %}
   #- job_name: 'node-exporter'
   #  static_configs:
@@ -45,7 +45,7 @@ scrape_configs:
   {% for item in groups['servers'] if hostvars[item]['name'] != 'metricsandbackups' -%}
   - job_name: '{{ hostvars[item]['name'] }}-docker'
     static_configs:
-      - targets: [ '{{ hostvars[item]['ansible_host'] }}:9323' ]
+      - targets: [ '{{ hostvars[item]['network_ip'] }}:9323' ]
   {% endfor %}
   #- job_name: 'docker'
   #  static_configs:
@@ -55,7 +55,7 @@ scrape_configs:
   {% for item in groups['servers'] if hostvars[item]['name'] != 'metricsandbackups' -%}
   - job_name: '{{ hostvars[item]['name'] }}-postgres-exporter'
     static_configs:
-      - targets: [ '{{ hostvars[item]['ansible_host'] }}:{{ postgres_metrics_port }}' ]
+      - targets: [ '{{ hostvars[item]['network_ip'] }}:{{ postgres_metrics_port }}' ]
   {% endfor %}
   #- job_name: 'postgres-exporter'
   #  static_configs:

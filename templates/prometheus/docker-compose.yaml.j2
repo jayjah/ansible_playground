@@ -5,7 +5,7 @@ services:
     image: prom/prometheus-linux-amd64:latest
     expose:
       - 9090
-    network_mode: bridge
+    network_mode: host
     ports:
       - {{ prometheus_port }}:9090
     command:
@@ -28,7 +28,7 @@ services:
       - ./grafana.ini:/etc/grafana/grafana.ini
     expose:
       - 3000
-    network_mode: bridge
+    network_mode: host
     ports:
       - {{ grafana_port }}:3000
     environment:

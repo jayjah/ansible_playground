@@ -22,5 +22,6 @@
       hcloud_server_network:
         network: "{{ default_server_network }}"
         server: "{{ item.name }}"
+        ip: "{{ item.ip }}"
         state: present
       loop: "{{ create_server_list }}"

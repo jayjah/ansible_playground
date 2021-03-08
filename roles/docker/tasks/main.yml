@@ -8,6 +8,10 @@
   apt_repository:
     repo: deb https://download.docker.com/linux/ubuntu focal stable
     state: present
+  
+- name: Install docker
+  apt: name={{ item }} state=latest update_cache=yes
+  loop: [ 'docker-ce', 'docker-ce-cli', 'containerd.io', 'containerd', 'docker-compose', 'docker.io' ]
 
 - name: Ensure /etc/docker directory exists
   file:
@@ -24,10 +28,6 @@
     #owner: root
     #group: root
     mode: 0700
-  
-- name: Install docker
-  apt: name={{ item }} state=latest update_cache=yes
-  loop: [ 'docker-ce', 'docker-ce-cli', 'containerd.io', 'containerd', 'docker-compose', 'docker.io' ]
 
 - name: Start docker system service, in all cases, also issue daemon-reload to pick up config changes
   systemd:

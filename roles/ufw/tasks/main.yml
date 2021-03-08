@@ -2,21 +2,27 @@
 - name: Enable firewall
   ufw: state=enabled policy=deny logging='on'
 
+- name: Disallow all incoming traffic
+  ufw: policy=deny direction=incoming
+
 - name: Allow HTTP
   ufw: rule=allow port=80 proto=tcp
+  #when: inventory_hostname != 'metricsandbackups'
 
 - name: Allow HTTPS
   ufw: rule=allow port=443 proto=tcp
+  #when: inventory_hostname != 'metricsandbackups'
 
-- name: Allow SSH
-  ufw: rule=allow port=22 proto=tcp
+- name: Limit SSH
+  ufw: rule=limit port=22 proto=tcp
   
 - name: Allow OpenSSH
   ufw: rule=allow name=OpenSSH
 
 - name: Allow server port
   ufw: rule=allow port={{ server_port }} proto=tcp
-    
+  when: inventory_hostname != 'metricsandbackups'
+
 - name: Allow all access from subnet network to this host
   ufw:
     rule: allow
