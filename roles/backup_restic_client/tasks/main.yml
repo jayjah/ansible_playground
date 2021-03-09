@@ -32,6 +32,16 @@
         #group: "{{ username }}"
         #mode: "0755"
 
+    - name: remove old hive data (hive.hive)
+      file:
+        path: "/home/{{ username }}/backup/vaultbox.hive"
+        state: absent
+
+    - name: remove old hive data (hive.lock)
+      file:
+        path: "/home/{{ username }}/backup/vaultbox.lock"
+        state: absent
+
     - name: run backup application preparation script
       shell:
         chdir: "/home/{{ username }}/backup/"
