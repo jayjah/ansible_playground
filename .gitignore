@@ -3,7 +3,8 @@
 
 ### Ansible ###
 *.retry
-
+*ansible.log
+*.log
 # End of https://www.toptal.com/developers/gitignore/api/ansible
 
 # vars

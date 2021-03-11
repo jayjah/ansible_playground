@@ -39,21 +39,18 @@ COPY --from=prodimage /usr/lib/dart /usr/lib/dart
 ARG PATH="$PATH:/usr/lib/dart/bin:$PATH:/root/.pub-cache/bin"
 ENV PATH="$PATH:/usr/lib/dart/bin:$PATH:/root/.pub-cache/bin"
 # prepare ssh
-RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts && ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+RUN mkdir -p -m 0700 /root/.ssh && ssh-keyscan github.com >> /root/.ssh/known_hosts && ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
 
 # :: prod build ::
 FROM pre-prod-build as prod-sources
 WORKDIR /
-# get aqueduct
-#RUN git clone https://github.com/jayjah/aqueduct.git
 # get dart backend sources -> ssh access here needed
 RUN --mount=type=ssh git clone git@gitlab.com:movementfamily/dart_backend.git && cd dart_backend && git checkout dev && git pull --recurse-submodules && git submodule update --init
 
 FROM prod-sources as prod-build
 # install aqueduct
-#RUN cd aqueduct && git checkout override_with_git && git pull && pub get && pub global activate --source path .
-# compile jayjah/server
 RUN cd dart_backend/dependencies/aqueduct && pub get --no-precompile && cd ../..  && pub get --no-precompile && pub global activate --source path dependencies/aqueduct
+# compile server
 RUN cd dart_backend/dependencies/aqueduct && pub get && cd ../.. && pub global run aqueduct build
 # bundle project
 RUN tar cvzf server.tar.gz /dart_backend && cp server.tar.gz /root/server.tar.gz && chmod 0755 /root/server.tar.gz
