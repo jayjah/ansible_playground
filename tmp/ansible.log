@@ -168,3 +168,164 @@
 2021-03-09 01:03:27,134 p=17 u=root n=ansible | PLAY RECAP *********************************************************************
 2021-03-09 01:03:27,135 p=17 u=root n=ansible | jayjah                     : ok=12   changed=9    unreachable=0    failed=1    skipped=0    rescued=0    ignored=1   
 2021-03-09 01:03:27,136 p=17 u=root n=ansible | orthofit                   : ok=12   changed=9    unreachable=0    failed=1    skipped=0    rescued=0    ignored=1   
+2021-03-10 23:56:16,231 p=14 u=root n=ansible | PLAY [Deploy server] ***********************************************************
+2021-03-10 23:56:16,272 p=14 u=root n=ansible | TASK [Gathering Facts] *********************************************************
+2021-03-10 23:56:20,818 p=14 u=root n=ansible |  [ERROR]: User interrupted execution
+
+2021-03-10 23:57:24,664 p=26 u=root n=ansible | PLAY [Deploy server] ***********************************************************
+2021-03-10 23:57:24,688 p=26 u=root n=ansible | TASK [Gathering Facts] *********************************************************
+2021-03-10 23:57:27,314 p=26 u=root n=ansible |  [ERROR]: User interrupted execution
+
+2021-03-10 23:57:42,222 p=45 u=root n=ansible | PLAY [Deploy server] ***********************************************************
+2021-03-10 23:57:42,245 p=45 u=root n=ansible | TASK [Gathering Facts] *********************************************************
+2021-03-10 23:57:46,848 p=45 u=root n=ansible | ok: [orthofit]
+2021-03-10 23:58:04,552 p=45 u=root n=ansible | ok: [metricsandbackups]
+2021-03-10 23:58:12,350 p=45 u=root n=ansible | ok: [jayjah]
+2021-03-10 23:58:12,370 p=45 u=root n=ansible | TASK [deploy_server : Create server directory] *********************************
+2021-03-10 23:58:13,724 p=45 u=root n=ansible | changed: [jayjah]
+2021-03-10 23:58:13,728 p=45 u=root n=ansible | changed: [orthofit]
+2021-03-10 23:58:13,849 p=45 u=root n=ansible | changed: [metricsandbackups]
+2021-03-10 23:58:13,870 p=45 u=root n=ansible | TASK [deploy_server : Copy server application to remote host] ******************
+2021-03-11 00:01:00,076 p=45 u=root n=ansible |  [ERROR]: User interrupted execution
+
+2021-03-11 00:18:37,183 p=22 u=root n=ansible | ERROR! Syntax Error while loading YAML.
+  did not find expected key
+
+The error appears to be in '/root/home/roles/deploy_server/tasks/main.yml': line 19, column 56, but may
+be elsewhere in the file depending on the exact syntax problem.
+
+The offending line appears to be:
+
+- name: Uncompress server archive
+  shell: "tar xvzf /home/{{ username }}/server.tar.gz" // rm -rf /home/{{ username }}/dart_server.gz
+                                                       ^ here
+We could be wrong, but this one looks like it might be an issue with
+missing quotes. Always quote template expression brackets when they
+start a value. For instance:
+
+    with_items:
+      - {{ foo }}
+
+Should be written as:
+
+    with_items:
+      - "{{ foo }}"
+
+2021-03-11 00:19:01,583 p=26 u=root n=ansible | PLAY [Deploy server] ***********************************************************
+2021-03-11 00:19:01,621 p=26 u=root n=ansible | TASK [Gathering Facts] *********************************************************
+2021-03-11 00:19:07,299 p=26 u=root n=ansible | ok: [orthofit]
+2021-03-11 00:20:24,093 p=26 u=root n=ansible | ok: [jayjah]
+2021-03-11 00:21:00,110 p=26 u=root n=ansible | ok: [metricsandbackups]
+2021-03-11 00:21:00,130 p=26 u=root n=ansible | TASK [deploy_server : Create server directory] *********************************
+2021-03-11 00:21:01,960 p=26 u=root n=ansible | ok: [metricsandbackups]
+2021-03-11 00:21:02,146 p=26 u=root n=ansible | ok: [jayjah]
+2021-03-11 00:22:09,322 p=26 u=root n=ansible | ok: [orthofit]
+2021-03-11 00:22:09,342 p=26 u=root n=ansible | TASK [deploy_server : Copy compressed server archive to remote host] ***********
+2021-03-11 00:23:35,375 p=26 u=root n=ansible | changed: [orthofit]
+2021-03-11 00:23:56,717 p=26 u=root n=ansible | changed: [jayjah]
+2021-03-11 00:29:49,193 p=26 u=root n=ansible | fatal: [metricsandbackups]: UNREACHABLE! => {"changed": false, "msg": "Failed to connect to the host via ssh: Connection closed by 159.69.29.117 port 22", "unreachable": true}
+2021-03-11 00:29:49,214 p=26 u=root n=ansible | TASK [deploy_server : Uncompress server archive] *******************************
+2021-03-11 00:29:55,291 p=26 u=root n=ansible | [WARNING]: Consider using the unarchive module rather than running 'tar'.  If
+you need to use command because unarchive is insufficient you can add 'warn:
+false' to this command task or set 'command_warnings=False' in ansible.cfg to
+get rid of this message.
+
+2021-03-11 00:29:55,293 p=26 u=root n=ansible | changed: [orthofit]
+2021-03-11 00:32:58,955 p=26 u=root n=ansible | fatal: [jayjah]: UNREACHABLE! => {"changed": false, "msg": "Failed to connect to the host via ssh: Connection closed by 157.90.175.33 port 22", "unreachable": true}
+2021-03-11 00:32:58,973 p=26 u=root n=ansible | TASK [deploy_server : Remove compressed archive] *******************************
+2021-03-11 00:33:03,042 p=26 u=root n=ansible | [WARNING]: Consider using the file module with state=absent rather than running
+'rm'.  If you need to use command because file is insufficient you can add
+'warn: false' to this command task or set 'command_warnings=False' in
+ansible.cfg to get rid of this message.
+
+2021-03-11 00:33:03,044 p=26 u=root n=ansible | changed: [orthofit]
+2021-03-11 00:33:03,064 p=26 u=root n=ansible | TASK [deploy_server : Create server config yaml file] **************************
+2021-03-11 00:33:05,719 p=26 u=root n=ansible | changed: [orthofit]
+2021-03-11 00:33:05,740 p=26 u=root n=ansible | TASK [deploy_server : Build server docker container (jayjah/server-dart)] ******
+2021-03-11 00:33:07,470 p=26 u=root n=ansible | fatal: [orthofit]: FAILED! => {"changed": true, "cmd": "cd /home/jayjah/dart_server && dart bin/cli.dart docker build --vm", "delta": "0:00:00.435536", "end": "2021-03-11 01:34:07.863784", "msg": "non-zero return code", "rc": 254, "start": "2021-03-11 01:34:07.428248", "stderr": "Error when reading 'bin/cli.dart': No such file or directory.", "stderr_lines": ["Error when reading 'bin/cli.dart': No such file or directory."], "stdout": "", "stdout_lines": []}
+2021-03-11 00:33:07,473 p=26 u=root n=ansible | PLAY RECAP *********************************************************************
+2021-03-11 00:33:07,474 p=26 u=root n=ansible | jayjah                     : ok=3    changed=1    unreachable=1    failed=0    skipped=0    rescued=0    ignored=0   
+2021-03-11 00:33:07,475 p=26 u=root n=ansible | metricsandbackups          : ok=2    changed=0    unreachable=1    failed=0    skipped=0    rescued=0    ignored=0   
+2021-03-11 00:33:07,475 p=26 u=root n=ansible | orthofit                   : ok=6    changed=4    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2021-03-11 00:35:53,089 p=194 u=root n=ansible | PLAY [Deploy server] ***********************************************************
+2021-03-11 00:35:53,113 p=194 u=root n=ansible | TASK [Gathering Facts] *********************************************************
+2021-03-11 00:35:54,964 p=194 u=root n=ansible |  [ERROR]: User interrupted execution
+
+2021-03-11 00:36:11,053 p=209 u=root n=ansible | PLAY [Deploy server] ***********************************************************
+2021-03-11 00:36:11,075 p=209 u=root n=ansible | TASK [Gathering Facts] *********************************************************
+2021-03-11 00:36:15,896 p=209 u=root n=ansible | ok: [jayjah]
+2021-03-11 00:36:26,283 p=209 u=root n=ansible | ok: [orthofit]
+2021-03-11 00:37:12,197 p=209 u=root n=ansible | ok: [metricsandbackups]
+2021-03-11 00:37:12,216 p=209 u=root n=ansible | TASK [deploy_server : Create server directory] *********************************
+2021-03-11 00:37:13,582 p=209 u=root n=ansible | ok: [jayjah]
+2021-03-11 00:37:13,605 p=209 u=root n=ansible | ok: [metricsandbackups]
+2021-03-11 00:37:13,768 p=209 u=root n=ansible | ok: [orthofit]
+2021-03-11 00:37:13,790 p=209 u=root n=ansible | TASK [deploy_server : Copy server archive to remote host and decompress it afterwards] ***
+2021-03-11 00:37:13,842 p=209 u=root n=ansible | fatal: [orthofit]: FAILED! => {"changed": false, "msg": "async is not supported for this task."}
+2021-03-11 00:37:13,861 p=209 u=root n=ansible | fatal: [jayjah]: FAILED! => {"changed": false, "msg": "async is not supported for this task."}
+2021-03-11 00:37:13,881 p=209 u=root n=ansible | fatal: [metricsandbackups]: FAILED! => {"changed": false, "msg": "async is not supported for this task."}
+2021-03-11 00:37:13,883 p=209 u=root n=ansible | PLAY RECAP *********************************************************************
+2021-03-11 00:37:13,884 p=209 u=root n=ansible | jayjah                     : ok=2    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2021-03-11 00:37:13,885 p=209 u=root n=ansible | metricsandbackups          : ok=2    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2021-03-11 00:37:13,886 p=209 u=root n=ansible | orthofit                   : ok=2    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2021-03-11 00:38:21,066 p=290 u=root n=ansible | PLAY [Deploy server] ***********************************************************
+2021-03-11 00:38:21,087 p=290 u=root n=ansible | TASK [Gathering Facts] *********************************************************
+2021-03-11 00:38:27,618 p=290 u=root n=ansible | ok: [jayjah]
+2021-03-11 00:38:31,681 p=290 u=root n=ansible |  [ERROR]: User interrupted execution
+
+2021-03-11 00:39:13,261 p=317 u=root n=ansible | PLAY [Deploy server] ***********************************************************
+2021-03-11 00:39:13,284 p=317 u=root n=ansible | TASK [Gathering Facts] *********************************************************
+2021-03-11 00:39:15,950 p=317 u=root n=ansible | ok: [jayjah]
+2021-03-11 00:39:16,545 p=317 u=root n=ansible | ok: [metricsandbackups]
+2021-03-11 00:39:16,623 p=317 u=root n=ansible | ok: [orthofit]
+2021-03-11 00:39:16,645 p=317 u=root n=ansible | TASK [deploy_server : Copy server archive to remote host and decompress it afterwards] ***
+2021-03-11 00:39:19,331 p=317 u=root n=ansible | fatal: [jayjah]: FAILED! => {"changed": false, "msg": "Source '/server.tar.gz' does not exist"}
+2021-03-11 00:39:19,333 p=317 u=root n=ansible | fatal: [orthofit]: FAILED! => {"changed": false, "msg": "Source '/server.tar.gz' does not exist"}
+2021-03-11 00:39:19,336 p=317 u=root n=ansible | fatal: [metricsandbackups]: FAILED! => {"changed": false, "msg": "Source '/server.tar.gz' does not exist"}
+2021-03-11 00:39:19,339 p=317 u=root n=ansible | PLAY RECAP *********************************************************************
+2021-03-11 00:39:19,339 p=317 u=root n=ansible | jayjah                     : ok=1    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2021-03-11 00:39:19,340 p=317 u=root n=ansible | metricsandbackups          : ok=1    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2021-03-11 00:39:19,341 p=317 u=root n=ansible | orthofit                   : ok=1    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2021-03-11 00:46:12,545 p=23 u=root n=ansible | PLAY [Deploy server] ***********************************************************
+2021-03-11 00:46:12,575 p=23 u=root n=ansible | TASK [Gathering Facts] *********************************************************
+2021-03-11 00:46:15,844 p=23 u=root n=ansible | ok: [metricsandbackups]
+2021-03-11 00:46:15,900 p=23 u=root n=ansible | ok: [orthofit]
+2021-03-11 00:46:15,989 p=23 u=root n=ansible | ok: [jayjah]
+2021-03-11 00:46:16,010 p=23 u=root n=ansible | TASK [deploy_server : Copy server archive to remote host and decompress it afterwards] ***
+2021-03-11 00:46:18,528 p=23 u=root n=ansible | fatal: [metricsandbackups]: FAILED! => {"changed": false, "msg": "Source '/server.tar.gz' does not exist"}
+2021-03-11 00:46:18,539 p=23 u=root n=ansible | fatal: [jayjah]: FAILED! => {"changed": false, "msg": "Source '/server.tar.gz' does not exist"}
+2021-03-11 00:46:18,548 p=23 u=root n=ansible | fatal: [orthofit]: FAILED! => {"changed": false, "msg": "Source '/server.tar.gz' does not exist"}
+2021-03-11 00:46:18,550 p=23 u=root n=ansible | PLAY RECAP *********************************************************************
+2021-03-11 00:46:18,551 p=23 u=root n=ansible | jayjah                     : ok=1    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2021-03-11 00:46:18,552 p=23 u=root n=ansible | metricsandbackups          : ok=1    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2021-03-11 00:46:18,553 p=23 u=root n=ansible | orthofit                   : ok=1    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2021-03-11 00:47:12,918 p=113 u=root n=ansible | PLAY [Deploy server] ***********************************************************
+2021-03-11 00:47:12,944 p=113 u=root n=ansible | TASK [Gathering Facts] *********************************************************
+2021-03-11 00:47:15,561 p=113 u=root n=ansible | ok: [orthofit]
+2021-03-11 00:47:15,602 p=113 u=root n=ansible | ok: [metricsandbackups]
+2021-03-11 00:47:15,888 p=113 u=root n=ansible | ok: [jayjah]
+2021-03-11 00:47:15,908 p=113 u=root n=ansible | TASK [deploy_server : Copy server archive to remote host and decompress it afterwards] ***
+2021-03-11 00:47:18,473 p=113 u=root n=ansible | fatal: [jayjah]: FAILED! => {"changed": false, "msg": "Source 'server.tar.gz' does not exist"}
+2021-03-11 00:47:18,510 p=113 u=root n=ansible | fatal: [metricsandbackups]: FAILED! => {"changed": false, "msg": "Source 'server.tar.gz' does not exist"}
+2021-03-11 00:47:18,628 p=113 u=root n=ansible | fatal: [orthofit]: FAILED! => {"changed": false, "msg": "Source 'server.tar.gz' does not exist"}
+2021-03-11 00:47:18,631 p=113 u=root n=ansible | PLAY RECAP *********************************************************************
+2021-03-11 00:47:18,632 p=113 u=root n=ansible | jayjah                     : ok=1    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2021-03-11 00:47:18,633 p=113 u=root n=ansible | metricsandbackups          : ok=1    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2021-03-11 00:47:18,634 p=113 u=root n=ansible | orthofit                   : ok=1    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2021-03-11 01:06:31,333 p=14 u=root n=ansible | PLAY [Deploy server] ************************************************************************************************
+2021-03-11 01:06:31,396 p=14 u=root n=ansible | TASK [Gathering Facts] **********************************************************************************************
+2021-03-11 01:06:36,137 p=14 u=root n=ansible |  [ERROR]: User interrupted execution
+
+2021-03-11 01:10:54,202 p=38 u=root n=ansible | PLAY [Deploy server] ************************************************************************************************
+2021-03-11 01:10:54,237 p=38 u=root n=ansible | TASK [Gathering Facts] **********************************************************************************************
+2021-03-11 01:10:57,539 p=38 u=root n=ansible | ok: [metricsandbackups]
+2021-03-11 01:10:57,596 p=38 u=root n=ansible | ok: [orthofit]
+2021-03-11 01:10:57,789 p=38 u=root n=ansible | ok: [jayjah]
+2021-03-11 01:10:57,811 p=38 u=root n=ansible | TASK [deploy_server : Copy server archive to remote host and decompress it afterwards] ******************************
+2021-03-11 01:11:00,360 p=38 u=root n=ansible | fatal: [metricsandbackups]: FAILED! => {"changed": false, "msg": "Source '/root/server.tar.gz' does not exist"}
+2021-03-11 01:11:00,364 p=38 u=root n=ansible | fatal: [jayjah]: FAILED! => {"changed": false, "msg": "Source '/root/server.tar.gz' does not exist"}
+2021-03-11 01:11:00,428 p=38 u=root n=ansible | fatal: [orthofit]: FAILED! => {"changed": false, "msg": "Source '/root/server.tar.gz' does not exist"}
+2021-03-11 01:11:00,431 p=38 u=root n=ansible | PLAY RECAP **********************************************************************************************************
+2021-03-11 01:11:00,432 p=38 u=root n=ansible | jayjah                     : ok=1    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2021-03-11 01:11:00,432 p=38 u=root n=ansible | metricsandbackups          : ok=1    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2021-03-11 01:11:00,433 p=38 u=root n=ansible | orthofit                   : ok=1    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   

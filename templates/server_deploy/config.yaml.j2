@@ -1,0 +1,59 @@
+databaseLive:
+ username: {{ postgres_db_user }}
+ password: {{ postgres_db_password }}
+ host: {{ postgres_container_host }}
+ port: {{ postgres_container_port }}
+ databaseName: {{ postgres_db_name }}
+databaseTest:
+ username: {{ postgres_db_user }}
+ password: {{ postgres_db_password }}
+ host: {{ postgres_container_host }}
+ port: {{ postgres_container_port }}
+ databaseName: {{ postgres_db_name }}
+additionalDatabases:
+ orthofit:
+  username: {{ postgres_db_user }}
+  password: {{ postgres_db_password }}
+  host: {{ postgres_container_host }}
+  port: {{ postgres_container_port }}
+  databaseName: {{ postgres_db_name }}
+oldDumpDatabase:
+ username: {{ postgres_db_user }}
+ password: {{ postgres_db_password }}
+ host: {{ postgres_container_host }}
+ port: {{ postgres_container_port }}
+ databaseName: {{ postgres_db_name }}
+serverConfig:
+ debug: {{ server_debug }}
+ logging: {{ server_logging }}
+ ssl: {{ server_ssl }}
+ useArgon2: {{ server_argon }}
+ isolates: {{ server_isolates }}
+ enableWebSocketService: {{ server_enable_websocket }}
+ enableCronJobService: {{ server_enable_cronjobs }}
+ enableCacheService: {{ server_enable_cache }}
+ creationTrainingWeeks: {{ server_creation_training_weeks }}
+ basePathPrefix: {{ server_base_path_prefix }}
+ webSocketPort: {{ server_websocket_port }}
+ sshTestServer: ""
+ sshLiveServer: ""
+ sentryDns: {{ server_sentry_dns }}
+ redisCacheConfig:
+  host:
+  port:
+ kafkaConfig:
+  host:
+  port:
+ deployServerConfig:
+  tmuxSessionName: ""
+  aotPathOnRemoteHost: ""
+  serverUrl: ""
+ containerName: {{ server_container_name }}
+host: {{ server_host }}
+envPort:
+port: {{ server_port }}
+databaseUrl:
+keysFromEnvironment: {{ server_keys_from_env }}
+mailUrl: {{ server_mail_url }}
+pushUrl: {{ server_push_url }}
+wordpressUrl: {{ server_wordpress_url }}

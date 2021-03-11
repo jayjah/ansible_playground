@@ -1,0 +1,62 @@
+---
+#- name: Create server directory
+#  file:
+#    path: "/home/{{ username }}/dart_server"
+#    state: directory
+#    owner: "{{ username }}"
+#    group: "{{ username }}"
+#    mode: "0755"
+
+- name: Copy server archive to remote host and decompress it afterwards
+  unarchive:
+    src: /root/server.tar.gz
+    dest: "/home/{{ username }}/dart_server"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: "0755"
+    remote_src: yes
+  #async: 60
+  #poll: 8
+
+- name: Remove compressed archive
+  file:
+    path: "/home/{{ username }}/server.tar.gz"
+    state: absent
+  become: true
+
+- name: Create server config yaml file
+  template:
+    src: templates/server_deploy/config.yaml.j2
+    dest: "/home/{{ username }}/dart_server/config.yaml"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0700
+
+- name: Build server docker container (jayjah/server-dart)
+  shell:
+    chdir: "/home/{{ username }}/dart_server"
+    command: dart bin/cli.dart docker build --vm
+  args:
+    executable: /bin/bash
+  become: false
+
+- name: Run server docker container (jayjah/server-dart)
+  docker_container:
+    name: server-dart
+    image: "{{ server_container_name }}"
+    state: started
+    recreate: true
+    restart: false
+    restart_policy: unless-stopped
+    published_ports:
+      - "{{ server_port }}:{{ server_port }}"
+    volumes:
+      - "/home/{{ username }}/dart_server/public:/app/public"
+    output_logs: yes
+    log_driver: json-file
+    log_options:
+      max-size: 10m
+      labels: server-dart
+      max-file: '3'
+    env:
+      POSTGRES_DB: "{{ postgres_db_name }}"

@@ -8,5 +8,6 @@
     - vars/settings.yml
     - vars/backup_default.yml
     - vars/database_default.yml
+    - vars/server_deploy_default.yml
   roles:
     - backup_restic_client

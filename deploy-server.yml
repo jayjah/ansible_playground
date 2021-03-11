@@ -1,0 +1,12 @@
+---
+- name: Deploy server
+  hosts: servers
+  gather_facts: true
+  user: "{{ username }}"
+  vars_files:
+    - vars/default.yml
+    - vars/settings.yml
+    - vars/server_deploy_default.yml
+    - vars/database_default.yml
+  roles:
+    - deploy_server
