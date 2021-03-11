@@ -15,8 +15,6 @@
     group: "{{ username }}"
     mode: "0755"
     remote_src: false
-  #async: 60
-  #poll: 8
 
 - name: Remove compressed archive
   file:
@@ -32,14 +30,43 @@
     group: "{{ username }}"
     mode: 0700
 
-- name: Build server docker container (jayjah/server-dart)
-  shell:
-    chdir: "/home/{{ username }}/dart_backend"
-    cmd: "dart pub get && dart bin/cli.dart docker build --vm"
-  args:
-    executable: /bin/bash
-  become: false
-  become_user: "{{ username }}"
+#- name: Create server keys_config yaml file
+#  template:
+#    src: templates/server_deploy/keys_config.yaml.j2
+#    dest: "/home/{{ username }}/dart_backend/keys_config.yaml"
+#    owner: "{{ username }}"
+#    group: "{{ username }}"
+#    mode: 0700
+- name: Remove old docker container
+  docker_container:
+    name: "{{ server_container_name }}"
+    state: absent
+
+- name: Remove old docker image
+  docker_image:
+    name: "{{ server_container_name }}"
+    state: absent
+
+- name: Build server docker image (jayjah/server-dart)
+  docker_image:
+    name: "{{ server_container_name }}"
+    build:
+      path: "/home/{{ username }}/dart_backend"
+      dockerfile: docker/Dockerfile
+      pull: yes
+      args:
+        ISOLATES: "{{ server_isolates }}"
+        PORTS: "{{ server_port }}"
+    source: build
+
+#- name: Build server docker container (jayjah/server-dart)
+#  shell:
+#    chdir: "/home/{{ username }}/dart_backend"
+#    cmd: "dart pub get && dart bin/cli.dart docker build --vm"
+#  args:
+#    executable: /bin/bash
+#  become: false
+#  become_user: "{{ username }}"
 
 - name: Run server docker container (jayjah/server-dart)
   docker_container:

@@ -16,4 +16,5 @@
     - docker
     - postgres_db
     - redis_db
+    - docker_clear
     - log

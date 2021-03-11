@@ -3,5 +3,9 @@
   hosts: servers
   become: true
   become_user: root
+  vars_files:
+    - vars/default.yml
   roles:
     - os_update
+    - docker_clear
+    - log

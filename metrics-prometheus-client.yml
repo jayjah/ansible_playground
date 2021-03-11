@@ -10,3 +10,4 @@
     - vars/database_default.yml
   roles:
     - metrics_prometheus_client
+    - docker_clear
