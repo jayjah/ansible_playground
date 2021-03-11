@@ -11,6 +11,9 @@ vars/hosts
 vars/default.yml
 vars/settings.yml
 .restic_backup.json
+vars/database_default.yml
+vars/server_deploy_default.yml
+vars/
 
 # os
 .DS_Store

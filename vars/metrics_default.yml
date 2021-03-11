@@ -1,6 +1,0 @@
-cadvisor_metrics_port: 8080
-node_metrics_port: 9100
-postgres_metrics_port: 9187
-prometheus_port: 9090
-grafana_port: 3000
-scrape_interval: 15s
