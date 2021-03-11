@@ -12,4 +12,9 @@
   become: true
 
 - name: Install dart
-  apt: update_cache=yes name=dart state=latest
+  apt:
+    update_cache: yes
+    name: 'dart=2.10.5-1'
+    state: present
+    force: yes
+    dpkg_options: 'allow-downgrades'

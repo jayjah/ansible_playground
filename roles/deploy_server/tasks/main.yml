@@ -10,11 +10,11 @@
 - name: Copy server archive to remote host and decompress it afterwards
   unarchive:
     src: /root/server.tar.gz
-    dest: "/home/{{ username }}/dart_server"
+    dest: "/home/{{ username }}"
     owner: "{{ username }}"
     group: "{{ username }}"
     mode: "0755"
-    remote_src: yes
+    remote_src: false
   #async: 60
   #poll: 8
 
@@ -27,18 +27,19 @@
 - name: Create server config yaml file
   template:
     src: templates/server_deploy/config.yaml.j2
-    dest: "/home/{{ username }}/dart_server/config.yaml"
+    dest: "/home/{{ username }}/dart_backend/config.yaml"
     owner: "{{ username }}"
     group: "{{ username }}"
     mode: 0700
 
 - name: Build server docker container (jayjah/server-dart)
   shell:
-    chdir: "/home/{{ username }}/dart_server"
-    command: dart bin/cli.dart docker build --vm
+    chdir: "/home/{{ username }}/dart_backend"
+    cmd: "dart pub get && dart bin/cli.dart docker build --vm"
   args:
     executable: /bin/bash
   become: false
+  become_user: "{{ username }}"
 
 - name: Run server docker container (jayjah/server-dart)
   docker_container:
