@@ -27,3 +27,6 @@ workspace.code-workspace
 id_rsa.pem
 public_server_key
 public_user_key
+
+# stuff to deploy
+release.*

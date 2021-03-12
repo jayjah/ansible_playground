@@ -17,3 +17,8 @@
     name: 'dart={{ dart_version }}'
     state: present
     force: yes
+
+- name: Prevent dart from being upgraded
+  dpkg_selections:
+    name: dart
+    selection: hold

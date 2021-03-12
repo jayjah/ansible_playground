@@ -28,6 +28,7 @@
     #owner: root
     #group: root
     mode: 0700
+    force: yes
 
 - name: Start docker system service, in all cases, also issue daemon-reload to pick up config changes
   systemd:

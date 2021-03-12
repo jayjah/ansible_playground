@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.2
 # options:
-#       [dev, prod] prod == with compiled dart libraries; dev == without compiled dart libraries
+#       [dev, prod] prod == with backend server repository; dev == without compiled dart libraries
 #
 ARG APP_ENV=dev
 ARG DART_LIBRARY_VERSION=2.12.0
@@ -29,7 +29,7 @@ FROM ubuntu:$UBUNTU_VERSION as baseimage
 LABEL maintainer="jayjah (jayjah1) <markuskrebs93@gmail.com>"
 # update os && install dependencies and ansible
 RUN apt -y update && apt -y upgrade && apt -y dist-upgrade
-RUN apt -y install ansible python3-pip build-essential libssl-dev libffi-dev python3-dev vim sshpass hcloud-cli apache2-utils snap git
+RUN apt -y install ansible python3-pip build-essential libssl-dev libffi-dev python3-dev vim sshpass hcloud-cli apache2-utils snap git zip
 RUN pip3 install hcloud passlib
 RUN mkdir /root/home && mkdir /root/home/data
 
@@ -49,11 +49,12 @@ RUN --mount=type=ssh git clone git@gitlab.com:movementfamily/dart_backend.git &&
 
 FROM prod-sources as prod-build
 # install aqueduct
-RUN cd dart_backend/dependencies/aqueduct && pub get --no-precompile && cd ../..  && pub get --no-precompile && pub global activate --source path dependencies/aqueduct
+#RUN cd dart_backend/dependencies/aqueduct && pub get --no-precompile && cd ../..  && pub get --no-precompile && pub global activate --source path dependencies/aqueduct
 # compile server
-RUN cd dart_backend/dependencies/aqueduct && pub get && cd ../.. && pub global run aqueduct build
-# bundle project
-RUN tar cvzf server.tar.gz /dart_backend && cp server.tar.gz /root/server.tar.gz && chmod 0755 /root/server.tar.gz
+RUN cd dart_backend/dependencies/aqueduct && pub get && cd ../.. && pub get
+#&& cd ../.. #&& pub global run aqueduct build
+# rename directory && bundle project
+RUN mv -T dart_backend backend && tar cvzf server.tar.gz /backend && cp server.tar.gz /root/server.tar.gz && chmod 0755 /root/server.tar.gz
 
 # :: dev build ::
 FROM baseimage as dev-build

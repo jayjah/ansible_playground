@@ -22,12 +22,13 @@
         dest: "/home/{{ username }}/backup/backup_runtime.sh"
         owner: "{{ username }}"
         group: "{{ username }}"
-        mode: "0755"
+        mode: 0755
 
     - name: install restic client config to remote host
       template:
         src: templates/.restic_backup.json.j2
         dest: "/home/{{ username }}/backup/.restic_backup.json"
+        force: yes
         #owner: "{{ username }}"
         #group: "{{ username }}"
         #mode: "0755"
@@ -57,7 +58,7 @@
         path: "/home/{{ username }}/backup/vaultbox.hive"
         owner: "{{ username }}"
         group: "{{ username }}"
-        mode: "0755"
+        mode: 0755
 
     - name: ensure restic file has correct permissions (hive.lock)
       file:
@@ -65,7 +66,7 @@
         path: "/home/{{ username }}/backup/vaultbox.lock"
         owner: "{{ username }}"
         group: "{{ username }}"
-        mode: "0755"
+        mode: 0755
 
     - name: remove restic client config
       file:

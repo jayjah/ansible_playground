@@ -1,6 +1,6 @@
 ---
 - name: Deploy server
-  hosts: servers
+  hosts: backendservers
   gather_facts: true
   user: root
   vars_files:

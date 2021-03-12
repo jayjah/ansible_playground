@@ -3,7 +3,7 @@
   file:
     state: directory
     path: /tmp/backups
-    mode: "0755"
+    mode: 0755
 # server should only be rechable in private network, NOT public
 #- name: Allow restic server port
 #  ufw: rule=allow port="{{ restic_port | string }}" proto=tcp

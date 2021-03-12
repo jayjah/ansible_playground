@@ -38,11 +38,13 @@
       template:
         src: templates/nginx.conf
         dest: /etc/nginx/nginx.conf
+        force: yes
 
     - name: Install nginx site for letsencrypt requests
       template:
         src: templates/nginx-http.j2
         dest: /etc/nginx/sites-enabled/http
+        force: yes
 
     - name: Create folders for each domain
       shell: "echo '-d {{ domain_names | join(' -d ') }}'"
@@ -65,6 +67,7 @@
       template:
         src: templates/nginx-le.j2
         dest: /etc/nginx/sites-enabled/le
+        force: yes
 
     - name: Reload nginx to activate specified site
       service: name=nginx state=restarted
