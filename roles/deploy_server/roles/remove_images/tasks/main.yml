@@ -1,0 +1,10 @@
+---
+- name: Remove old docker container
+  docker_container:
+    name: "{{ server_container_name }}"
+    state: absent
+
+- name: Remove old docker image
+  docker_image:
+    name: "{{ server_container_name }}"
+    state: absent

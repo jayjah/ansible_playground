@@ -1,34 +1,17 @@
 ---
-#- name: Create server directory
-#  file:
-#    path: "/home/{{ username }}/dart_server"
-#    state: directory
-#    owner: "{{ username }}"
-#    group: "{{ username }}"
-#    mode: "0755"
+- name: Remove old containers
+  include_role:
+    name: remove_images
 
-- name: Copy server archive to remote host and decompress it afterwards
-  unarchive:
-    src: /root/server.tar.gz
-    dest: "/home/{{ username }}"
-    owner: "{{ username }}"
-    group: "{{ username }}"
-    mode: "0755"
-    remote_src: false
+- name: Build server image from repository
+  include_role:
+    name: build_docker_image
+  when: build_from_archive == False
 
-- name: Remove compressed archive
-  file:
-    path: "/home/{{ username }}/server.tar.gz"
-    state: absent
-  become: true
-
-- name: Create server config yaml file
-  template:
-    src: templates/server_deploy/config.yaml.j2
-    dest: "/home/{{ username }}/dart_backend/config.yaml"
-    owner: "{{ username }}"
-    group: "{{ username }}"
-    mode: 0700
+- name: Load server image from archive
+  include_role:
+    name: load_from_archive
+  when: build_from_archive == True
 
 #- name: Create server keys_config yaml file
 #  template:
@@ -37,36 +20,6 @@
 #    owner: "{{ username }}"
 #    group: "{{ username }}"
 #    mode: 0700
-- name: Remove old docker container
-  docker_container:
-    name: "{{ server_container_name }}"
-    state: absent
-
-- name: Remove old docker image
-  docker_image:
-    name: "{{ server_container_name }}"
-    state: absent
-
-- name: Build server docker image (jayjah/server-dart)
-  docker_image:
-    name: "{{ server_container_name }}"
-    build:
-      path: "/home/{{ username }}/dart_backend"
-      dockerfile: docker/Dockerfile
-      pull: yes
-      args:
-        ISOLATES: "{{ server_isolates }}"
-        PORTS: "{{ server_port }}"
-    source: build
-
-#- name: Build server docker container (jayjah/server-dart)
-#  shell:
-#    chdir: "/home/{{ username }}/dart_backend"
-#    cmd: "dart pub get && dart bin/cli.dart docker build --vm"
-#  args:
-#    executable: /bin/bash
-#  become: false
-#  become_user: "{{ username }}"
 
 - name: Run server docker container (jayjah/server-dart)
   docker_container:

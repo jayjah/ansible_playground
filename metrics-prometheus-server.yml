@@ -7,5 +7,6 @@
     - vars/default.yml
     - vars/settings.yml
     - vars/metrics_default.yml
+    - vars/deploy_configs/server_deploy_default.yml
   roles:
     - metrics_prometheus_server

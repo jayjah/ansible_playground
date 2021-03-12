@@ -1,0 +1,35 @@
+---
+- name: Copy server archive to remote host and decompress it
+  unarchive:
+    src: /root/server.tar.gz
+    dest: "/home/{{ username }}"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: "0755"
+    remote_src: false
+
+- name: Remove compressed archive
+  file:
+    path: "/home/{{ username }}/server.tar.gz"
+    state: absent
+  become: true
+
+- name: Create server config yaml file
+  template:
+    src: templates/server_deploy/config.yaml.j2
+    dest: "/home/{{ username }}/dart_backend/config.yaml"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0700
+
+- name: Build server docker image (jayjah/server-dart)
+  docker_image:
+    name: "{{ server_container_name }}"
+    build:
+      path: "/home/{{ username }}/dart_backend"
+      dockerfile: docker/Dockerfile
+      pull: yes
+      args:
+        ISOLATES: "{{ server_isolates }}"
+        PORTS: "{{ server_port }}"
+    source: build

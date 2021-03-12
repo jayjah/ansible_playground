@@ -6,17 +6,12 @@ services:
     expose:
       - 9090
     network_mode: host
-    #ports:
-    #  - {{ prometheus_port }}:9090
     command:
       - --config.file=/etc/prometheus/prometheus.yml
     volumes:
       - prometheusdata:/prometheus
       - ./prometheus.yaml:/etc/prometheus/prometheus.yml:ro
-    #links:
-    #  - "cadvisor:"
-    #  - "node-exporter:node-exporter"
-    #  - "restic_server:restic_server"
+      - ./alert.rules:/etc/prometheus/alert.rules
     restart: unless-stopped
 
   grafana:
@@ -29,8 +24,6 @@ services:
     expose:
       - 3000
     network_mode: host
-    #ports:
-    #  - {{ grafana_port }}:3000
     environment:
       GF_USERS_DEFAULT_THEME: dark
       GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-simple-json-datasource
@@ -44,8 +37,34 @@ services:
       #GF_SMTP_FROM_ADDRESS=myaddress@gmail.com
     depends_on:
       - prometheus
-    #links:
-    #  - "prometheus:prometheus"
+    restart: unless-stopped
+
+  alertmanager:
+    image: quay.io/prometheus/alertmanager
+    privileged: true
+    container_name: alertmanager
+    expose:
+      - 9093
+    network_mode: host
+    command:
+      - "--cluster.listen-address="
+      - "--config.file=/alertmanager.yaml"
+    volumes:
+      - ./alertmanager.yaml:/alertmanager.yaml
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
+  sentry-alert:
+    image: mikeroll/alertmanager-sentry-gateway:latest
+    container_name: sentry-alert
+    expose:
+      - 9096
+    network_mode: host
+    command:
+      - "--dsn={{ server_sentry_dns }}"
+    depends_on:
+      - alertmanager
     restart: unless-stopped
 
 volumes:
@@ -53,4 +72,3 @@ volumes:
     driver: local
   grafanadata:
     driver: local
-

@@ -74,7 +74,7 @@
       src: templates/prometheus/grafana.ini
       dest: "/home/{{ username }}/prometheus/grafana.ini"
 
-- name: Install prometheus.yml file
+- name: Install prometheus.yaml file
   template:
       src: templates/prometheus/prometheus.yaml.j2
       dest: "/home/{{ username }}/prometheus/prometheus.yaml"
@@ -84,6 +84,23 @@
       src: templates/prometheus/docker-compose.yaml.j2
       dest: "/home/{{ username }}/prometheus/docker-compose.yaml"
 
+- name: Install alert.rules file
+  template:
+    src: templates/prometheus/alert.rules
+    dest: "/home/{{ username }}/prometheus/alert.rules"
+
+- name: Install alertmanager.yaml file
+  template:
+    src: templates/prometheus/alertmanager.yaml.j2
+    dest: "/home/{{ username }}/prometheus/alertmanager.yaml"
+
+- name: Ensure prometheus is not running
+  docker_compose:
+    project_src: "/home/{{ username }}/prometheus/"
+    remove_images: all
+    state: absent
+
 - name: Create prometheus instance
   docker_compose:
     project_src: "/home/{{ username }}/prometheus/"
+    state: present
