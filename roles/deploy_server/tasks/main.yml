@@ -1,30 +1,34 @@
 ---
+- name: Ensure backend directory exist
+  file:
+    state: directory
+    path: "/home/{{ username }}/backend"
+    mode: 0755
+
 - name: Remove old containers
-  include_role:
-    name: remove_images
+  include: remove_images.yml
 
 - name: Build server image from repository
-  include_role:
-    name: build_docker_image
+  include: build_docker_image.yml
   when: build_from_archive == False
 
 - name: Load server image from archive
-  include_role:
-    name: load_from_archive
+  include: load_from_archive.yml
   when: build_from_archive == True
 
-#- name: Create server keys_config yaml file
-#  template:
-#    src: templates/server_deploy/keys_config.yaml.j2
-#    dest: "/home/{{ username }}/dart_backend/keys_config.yaml"
-#    owner: "{{ username }}"
-#    group: "{{ username }}"
-#    mode: 0700
+- name: Create server keys_config env file
+  template:
+    src: templates/server_deploy/keys_config.env.j2
+    dest: "/home/{{ username }}/backend/keys_config.env"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0700
+    force: yes
 
-- name: Run server docker container (jayjah/server-dart)
+- name: Run server
   docker_container:
-    name: server-dart
-    image: "{{ server_container_name }}"
+    name: "{{ server_container_name }}"
+    image: "{{ backend_docker_image_name }}"
     state: started
     recreate: true
     restart: false
@@ -32,12 +36,15 @@
     published_ports:
       - "{{ server_port }}:{{ server_port }}"
     volumes:
-      - "/home/{{ username }}/dart_server/public:/app/public"
+      - "/home/{{ username }}/backend/public:/app/public"
+    env_file: "/home/{{ username }}/backend/keys_config.env"
     output_logs: yes
     log_driver: json-file
     log_options:
       max-size: 10m
-      labels: server-dart
+      labels: backend-dart
       max-file: '3'
-    env:
-      POSTGRES_DB: "{{ postgres_db_name }}"
+
+- name: Deploy public static files
+  include: copy_public_files.yml
+  when: deploy_public_files == True

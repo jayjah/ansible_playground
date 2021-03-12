@@ -1,0 +1,78 @@
+---
+- name: Ensure public/images exist
+  file:
+    state: directory
+    path: "/home/{{ username }}/backend/public/images"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0755
+
+- name: Ensure public/files exist
+  file:
+    state: directory
+    path: "/home/{{ username }}/backend/public/files"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0755
+
+- name: Ensure public/web exist
+  file:
+    state: directory
+    path: "/home/{{ username }}/backend/public/web"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0755
+
+- name: Copy public archive to remote host and decompress it
+  unarchive:
+    src: "/root/home/files/{{ server_public_archive_name }}"
+    dest: "/home/{{ username }}"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0755
+    remote_src: false
+
+- name: Get images from public dir
+  find:
+    paths: "/home/{{ username }}/public/images"
+    file_type: file
+  register: images
+
+- name: Copy new images to backend directory
+  copy:
+    src: item.path
+    dest: "/home/{{ username }}/backend/public/images/{{ item.path }}"
+    force: no
+  with_items: "{{ images.files }}"
+
+- name: Get files from public dir
+  find:
+    paths: "/home/{{ username }}/public/files"
+    file_type: file
+  register: staticfiles
+
+- name: Copy new files to backend directory
+  copy:
+    src: item.path
+    dest: "/home/{{ username }}/backend/public/files/{{ item.path }}"
+    force: no
+  with_items: "{{ staticfiles.files }}"
+
+- name: Get web files from public dir
+  find:
+    paths: "/home/{{ username }}/public/web"
+    file_type: file
+  register: webfiles
+
+- name: Copy new web files to backend directory
+  copy:
+    src: item.path
+    dest: "/home/{{ username }}/backend/public/web/{{ item.path }}"
+    force: no
+  with_items: "{{ webfiles.files }}"
+
+- name: Remove public archive
+  file:
+    path: "/home/{{ username }}/{{ server_public_archive_name }}"
+    state: absent
+  become: true
