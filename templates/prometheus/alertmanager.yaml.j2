@@ -1,7 +1,7 @@
 global:
-  # The smarthost and SMTP sender used for mail notifications.
-  smtp_smarthost: 'localhost:25'
-  smtp_from: 'alertmanager@example.org'
+  smtp_smarthost: '{{ smtp_host }}'
+  smtp_auth_username: '{{ smtp_username }}'
+  smtp_auth_password: '{{ smtp_password }}'
 
 # The root route on which each incoming alert enters.
 route:
@@ -42,7 +42,6 @@ route:
 receivers:
 - name: error
   email_configs:
-  - to: 'jay@jayjah.de'
+  - to: '{{ smtp_report_to }}'
   webhook_configs:
-  - url: 'http://127.0.0.1:9096'
-    send_resolved: false
+  - url: 'http://127.0.0.1:{{ alertmanager_telegram_port }}'

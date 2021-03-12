@@ -31,35 +31,35 @@
 
 - name: Create prometheus directory
   file:
-      path: "/home/{{ username }}/prometheus"
-      state: directory
-      owner: "{{ username }}"
-      group: "{{ username }}"
-      mode: "0755"
+    path: "/home/{{ username }}/prometheus"
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0755
 
 - name: Create prometheus/dashboards directory
   file:
-      path: "/home/{{ username }}/prometheus/dashboards"
-      state: directory
-      owner: "{{ username }}"
-      group: "{{ username }}"
-      mode: "0755"
+    path: "/home/{{ username }}/prometheus/dashboards"
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0755
 
 - name: Create prometheus/prometheusdata directory
   file:
-      path: "/home/{{ username }}/prometheus/prometheusdata"
-      state: directory
-      owner: "{{ username }}"
-      group: "{{ username }}"
-      mode: "0755"
+    path: "/home/{{ username }}/prometheus/prometheusdata"
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0755
 
 - name: Create prometheus/grafanadata directory
   file:
-      path: "/home/{{ username }}/prometheus/grafanadata"
-      state: directory
-      owner: "{{ username }}"
-      group: "{{ username }}"
-      mode: "0755"
+    path: "/home/{{ username }}/prometheus/grafanadata"
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0755
 
 - name: Install prometheus/grafana rest-server.json
   copy:
@@ -67,32 +67,38 @@
     dest: "/home/{{ username }}/prometheus/dashboards/rest-server.json"
     owner: "{{ username }}"
     group: "{{ username }}"
-    mode: "0755"
+    mode: 0755
+    force: no
 
 - name: Install grafana.ini file
   template:
-      src: templates/prometheus/grafana.ini
-      dest: "/home/{{ username }}/prometheus/grafana.ini"
+    src: templates/prometheus/grafana.ini
+    dest: "/home/{{ username }}/prometheus/grafana.ini"
+    force: yes
 
 - name: Install prometheus.yaml file
   template:
-      src: templates/prometheus/prometheus.yaml.j2
-      dest: "/home/{{ username }}/prometheus/prometheus.yaml"
+    src: templates/prometheus/prometheus.yaml.j2
+    dest: "/home/{{ username }}/prometheus/prometheus.yaml"
+    force: yes
 
 - name: Install docker-compose.yaml file
   template:
-      src: templates/prometheus/docker-compose.yaml.j2
-      dest: "/home/{{ username }}/prometheus/docker-compose.yaml"
+    src: templates/prometheus/docker-compose.yaml.j2
+    dest: "/home/{{ username }}/prometheus/docker-compose.yaml"
+    force: yes
 
 - name: Install alert.rules file
   template:
     src: templates/prometheus/alert.rules
     dest: "/home/{{ username }}/prometheus/alert.rules"
+    force: yes
 
 - name: Install alertmanager.yaml file
   template:
     src: templates/prometheus/alertmanager.yaml.j2
     dest: "/home/{{ username }}/prometheus/alertmanager.yaml"
+    force: yes
 
 - name: Ensure prometheus is not running
   docker_compose:
