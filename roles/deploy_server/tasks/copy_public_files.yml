@@ -43,6 +43,7 @@
     src: item.path
     dest: "/home/{{ username }}/backend/public/images/{{ item.path }}"
     force: no
+    mode: 0755
   with_items: "{{ images.files }}"
 
 - name: Get files from public dir
@@ -56,6 +57,7 @@
     src: item.path
     dest: "/home/{{ username }}/backend/public/files/{{ item.path }}"
     force: no
+    mode: 0755
   with_items: "{{ staticfiles.files }}"
 
 - name: Get web files from public dir
@@ -69,6 +71,7 @@
     src: item.path
     dest: "/home/{{ username }}/backend/public/web/{{ item.path }}"
     force: no
+    mode: 0755
   with_items: "{{ webfiles.files }}"
 
 - name: Remove public archive

@@ -11,6 +11,7 @@
       - "{{ cadvisor_metrics_port }}:8080"
     output_logs: yes
     log_driver: json-file
+    cmd: "--housekeeping_interval=20s --storage_driver_buffer_duration=0m40s --max_procs=1"
     log_options:
       max-size: 10m
       labels: cadvisor
@@ -44,28 +45,3 @@
       max-size: 10m
       labels: node-exporter
       max-file: '3'
-
-- name: Start postgres metrics
-  docker_container:
-    name: postgres-exporter
-    image: quay.io/prometheuscommunity/postgres-exporter
-    state: started
-    recreate: yes
-    restart: yes
-    restart_policy: unless-stopped
-    published_ports:
-      - "{{ postgres_metrics_port }}:9187"
-    links:
-      - "{{ postgres_container_name }}:"
-    output_logs: yes
-    log_driver: json-file
-    log_options:
-      max-size: 10m
-      labels: postgres-exporter
-      max-file: '3'
-    env:
-      DATA_SOURCE_USER: "{{ postgres_db_user }}"
-      DATA_SOURCE_PASS: "{{ postgres_db_password }}"
-      DATA_SOURCE_URI: "{{ postgres_container_name }}:{{ postgres_container_port }}?sslmode=disable"
-      PG_auto-discover-databases: "true"
-  when: enable_postgres == True and inventory_hostname != 'metricsandbackups'

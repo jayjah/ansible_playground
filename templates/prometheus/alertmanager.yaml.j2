@@ -1,4 +1,5 @@
 global:
+  smtp_from: '{{ smtp_username }}'
   smtp_smarthost: '{{ smtp_host }}'
   smtp_auth_username: '{{ smtp_username }}'
   smtp_auth_password: '{{ smtp_password }}'
@@ -43,5 +44,3 @@ receivers:
 - name: error
   email_configs:
   - to: '{{ smtp_report_to }}'
-  webhook_configs:
-  - url: 'http://127.0.0.1:{{ alertmanager_telegram_port }}'

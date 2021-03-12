@@ -55,37 +55,6 @@ services:
       - prometheus
     restart: unless-stopped
 
-  #     replace sentry alert manager with telegram alert manager -> has its own metrics available && no costs when quota exceeded
-  #sentry-alert:
-  #  image: mikeroll/alertmanager-sentry-gateway:latest
-  #  container_name: sentry-alert
-  #  expose:
-  #    - 9096
-  #  network_mode: host
-  #  command:
-  #    - "--dsn={{ server_sentry_dns }}"
-  #  depends_on:
-  #    - alertmanager
-  #  restart: unless-stopped
-
-  telegram-alert:
-    image: slok/alertgram:latest
-    container_name: telegram-alert
-    expose:
-        # port wo auf /alerts gehorcht wird
-      - {{ alertmanager_telegram_port }}
-        # eigener port wo /metrics bereit gestellt wird
-      - 8081
-    network_mode: host
-    command:
-      - "--alertmanager.listen-address={{ alertmanager_telegram_port }}"
-      - "--telegram.api-token={{ telegram_api_token }}"
-      - "--telegram.chat-id={{ telegram_chat_id }}"
-      - "--dead-mans-switch.enable"
-    depends_on:
-      - alertmanager
-    restart: unless-stopped
-
 volumes:
   prometheusdata:
     driver: local

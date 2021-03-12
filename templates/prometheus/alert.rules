@@ -5,15 +5,154 @@ groups:
   - alert: InstanceDown
     expr: up == 0
     for: 5m
-    labels:
-      severity: "critical"
     annotations:
       summary: "Server-Instance  down"
 
   - alert: EndpointDown
     expr: probe_success == 0
     for: 30s
-    labels:
-      severity: "critical"
     annotations:
       summary: "Endpoint  down"
+
+ # - alert: PostgresqlDown
+ #   expr: pg_up == 0
+ #   for: 0m
+ #   labels:
+ #     severity: critical
+ #   annotations:
+ #     summary: Postgresql down (instance {{ $labels.instance }})
+
+ # - alert: PostgresqlTooManyConnections
+ #   expr: sum by (datname) (pg_stat_activity_count{datname!~"template.*|postgres"}) > pg_settings_max_connections * 0.8
+ #   for: 2m
+ #   labels:
+ #     severity: warning
+ #   annotations:
+ #     summary: Postgresql too many connections (instance {{ $labels.instance }})  (> 80%)
+
+ # - alert: PostgresqlSlowQueries
+ #   expr: pg_slow_queries > 0
+ #   for: 2m
+ #   labels:
+ #     severity: warning
+ #   annotations:
+ #     summary: Postgresql slow queries (instance {{ $labels.instance }})
+ #     description: PostgreSQL executes slow queries
+
+ # - alert: PostgresqlTooManyDeadTuples
+ #   expr: ((pg_stat_user_tables_n_dead_tup > 10000) / (pg_stat_user_tables_n_live_tup + pg_stat_user_tables_n_dead_tup)) >= 0.1 unless ON(instance) (pg_replication_is_replica == 1)
+ #   for: 2m
+ #   labels:
+ #     severity: warning
+ #   annotations:
+ #     summary: Postgresql too many dead tuples (instance {{ $labels.instance }})
+ #     description: PostgreSQL dead tuples is too large
+
+  - alert: PrometheusNotConnectedToAlertmanager
+    expr: prometheus_notifications_alertmanagers_discovered < 1
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: Prometheus not connected to alertmanager (instance {{ $labels.instance }})
+      description: Prometheus cannot connect the alertmanager
+
+  - alert: PrometheusAlertmanagerNotificationFailing
+    expr: rate(alertmanager_notifications_failed_total[1m]) > 0
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: Prometheus AlertManager notification failing (instance {{ $labels.instance }})
+      description: Alertmanager is failing sending notifications
+
+  - alert: HostOutOfMemory
+    expr: node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 < 10
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: Host out of memory (instance {{ $labels.instance }})
+      description: Node memory is filling up (< 10% left)
+
+  - alert: HostMemoryUnderMemoryPressure
+    expr: rate(node_vmstat_pgmajfault[1m]) > 1000
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: Host memory under memory pressure (instance {{ $labels.instance }})
+      description: The node is under heavy memory pressure. High rate of major page faults
+
+  - alert: HostUnusualNetworkThroughputIn
+    expr: sum by (instance) (rate(node_network_receive_bytes_total[2m])) / 1024 / 1024 > 100
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: Host unusual network throughput in (instance {{ $labels.instance }})
+      description: Host network interfaces are probably receiving too much data (> 100 MB/s)
+
+  - alert: HostUnusualNetworkThroughputOut
+    expr: sum by (instance) (rate(node_network_transmit_bytes_total[2m])) / 1024 / 1024 > 100
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: Host unusual network throughput out (instance {{ $labels.instance }})
+      description: Host network interfaces are probably sending too much data (> 100 MB/s)
+
+  - alert: HostHighCpuLoad
+    expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100) > 80
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: Host high CPU load (instance {{ $labels.instance }})
+      description: CPU load is > 80%
+
+  - alert: HostSystemdServiceCrashed
+    expr: node_systemd_unit_state{state="failed"} == 1
+    for: 0m
+    labels:
+      severity: warning
+    annotations:
+      summary: Host SystemD service crashed (instance {{ $labels.instance }})
+      description: SystemD service crashed
+
+  - alert: ContainerDatabaseKilled
+    expr: absent(container_memory_usage_bytes{name="backenddb"})
+    for: 20s
+    labels:
+      severity: critical
+    annotations:
+      summary: Container killed (instance {{ $labels.instance }})
+      description: Backend database container has disappeared
+
+  - alert: ContainerServerKilled
+    expr: absent(container_memory_usage_bytes{name="backend-server"})
+    for: 20s
+    labels:
+      severity: critical
+    annotations:
+      summary: Container killed (instance {{ $labels.instance }})
+      description: Backend server container has disappeared
+
+      # See https://medium.com/faun/how-much-is-too-much-the-linux-oomkiller-and-used-memory-d32186f29c9d
+  #- alert: ContainerMemoryUsage
+  #  expr: (sum(container_memory_working_set_bytes) BY (instance, name) / sum(container_spec_memory_limit_bytes > 0) BY (instance, name) * 100) > 80
+  #  for: 2m
+  #  labels:
+  #    severity: warning
+  #  annotations:
+  #    summary: Container Memory usage (instance {{ $labels.instance }})
+  #    description: Container Memory usage is above 80%
+
+  - alert: ContainerVolumeUsage
+    expr: (1 - (sum(container_fs_inodes_free) BY (instance) / sum(container_fs_inodes_total) BY (instance))) * 100 > 80
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: Container Volume usage (instance {{ $labels.instance }})
+      description: Container Volume usage is above 80%

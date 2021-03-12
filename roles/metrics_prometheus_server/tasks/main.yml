@@ -5,14 +5,6 @@
 - name: Deny grafana port
   ufw: rule=deny port={{ grafana_port }} proto=tcp
 
-- name: Allow incoming access to prometheus from port 22
-  ufw:
-    rule: allow
-    direction: in
-    proto: any
-    from_port: '22'
-    to_port: "{{ prometheus_port }}"
-
 - name: Allow incoming access to prometheus from grafana port
   ufw:
     rule: allow
@@ -21,13 +13,20 @@
     from_port: "{{ grafana_port }}"
     to_port: "{{ prometheus_port }}"
 
-- name: Allow incoming access to grafana from port 22
+- name: Allow incoming access from port 22
   ufw:
     rule: allow
     direction: in
     proto: any
-    from_port: '22'
+    from_port: "22"
     to_port: "{{ grafana_port }}"
+
+- name: Allow incoming access vom localhost
+  ufw:
+    rule: allow
+    direction: in
+    proto: any
+    from_ip: 127.0.0.1
 
 - name: Create prometheus directory
   file:
@@ -89,10 +88,10 @@
     force: yes
 
 - name: Install alert.rules file
-  template:
+  copy:
     src: templates/prometheus/alert.rules
     dest: "/home/{{ username }}/prometheus/alert.rules"
-    force: yes
+    remote_src: false
 
 - name: Install alertmanager.yaml file
   template:
