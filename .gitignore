@@ -31,3 +31,6 @@ public_user_key
 # stuff to deploy
 release.*
 *_release.*
+public.*
+public_*
+*_public
