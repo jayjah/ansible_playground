@@ -120,8 +120,8 @@ groups:
       summary: Host SystemD service crashed (instance {{ $labels.instance }})
       description: SystemD service crashed
 
-  - alert: ContainerDatabaseKilled
-    expr: absent(container_memory_usage_bytes{name="backenddb"})
+  - alert: DatabaseContainerKilled
+    expr: absent(container_memory_usage_bytes{name="backend-db"})
     for: 20s
     labels:
       severity: critical
@@ -129,7 +129,7 @@ groups:
       summary: Container killed (instance {{ $labels.instance }})
       description: Backend database container has disappeared
 
-  - alert: ContainerServerKilled
+  - alert: ServerContainerKilled
     expr: absent(container_memory_usage_bytes{name="backend-server"})
     for: 20s
     labels:
