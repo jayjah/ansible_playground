@@ -38,13 +38,19 @@
     file_type: file
   register: images
 
+- name: images from archive file
+  debug:
+    msg: "{{ item.path | basename }}"
+  loop: "{{ images.files }}"
+
 - name: Copy new images to backend directory
   copy:
-    src: item.path
-    dest: "/home/{{ username }}/backend/public/images/{{ item.path }}"
+    src: "/home/{{ username }}/public/images/{{ item.path | basename }}"
+    dest: "/home/{{ username }}/backend/public/images/{{ item.path | basename }}"
     force: no
     mode: 0755
-  with_items: "{{ images.files }}"
+    remote_src: true
+  loop: "{{ images.files }}"
 
 - name: Get files from public dir
   find:
@@ -54,11 +60,12 @@
 
 - name: Copy new files to backend directory
   copy:
-    src: item.path
-    dest: "/home/{{ username }}/backend/public/files/{{ item.path }}"
+    src: "/home/{{ username }}/public/files/{{ item.path | basename }}"
+    dest: "/home/{{ username }}/backend/public/files/{{ item.path | basename }}"
     force: no
     mode: 0755
-  with_items: "{{ staticfiles.files }}"
+    remote_src: true
+  loop: "{{ staticfiles.files }}"
 
 - name: Get web files from public dir
   find:
@@ -68,11 +75,12 @@
 
 - name: Copy new web files to backend directory
   copy:
-    src: item.path
-    dest: "/home/{{ username }}/backend/public/web/{{ item.path }}"
+    src: "/home/{{ username }}/public/web/{{ item.path | basename }}"
+    dest: "/home/{{ username }}/backend/public/web/{{ item.path | basename }}"
     force: no
     mode: 0755
-  with_items: "{{ webfiles.files }}"
+    remote_src: true
+  loop: "{{ webfiles.files }}"
 
 - name: Remove public archive
   file:

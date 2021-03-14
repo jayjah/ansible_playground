@@ -27,9 +27,9 @@ WORKDIR /root/home
 # :: base image ::
 FROM ubuntu:$UBUNTU_VERSION as baseimage
 LABEL maintainer="jayjah (jayjah1) <markuskrebs93@gmail.com>"
-# update os && install dependencies and ansible
+# update os && install dependencies, ansible, restic
 RUN apt -y update && apt -y upgrade && apt -y dist-upgrade
-RUN apt -y install ansible python3-pip build-essential libssl-dev libffi-dev python3-dev vim sshpass hcloud-cli apache2-utils snap git zip
+RUN apt -y install ansible python3-pip build-essential libssl-dev libffi-dev python3-dev vim sshpass hcloud-cli apache2-utils snap git zip unzip restic
 RUN pip3 install hcloud passlib
 RUN mkdir /root/home && mkdir /root/home/data
 
