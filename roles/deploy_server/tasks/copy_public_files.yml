@@ -84,6 +84,6 @@
 
 - name: Remove public archive
   file:
-    path: "/home/{{ username }}/{{ server_public_archive_name }}"
+    path: "/home/{{ username }}/public"
     state: absent
   become: true

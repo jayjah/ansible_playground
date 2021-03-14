@@ -83,7 +83,7 @@
     - name: make backup
       shell:
         chdir: "/home/{{ username }}/backup/"
-        cmd: "./backup_runtime.sh make --name {{ restic_client_user }}"
+        cmd: "./backup_runtime.sh make --name {{ name }}"
       args:
         executable: /bin/bash
       become: no
