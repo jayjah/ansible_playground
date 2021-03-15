@@ -7,14 +7,14 @@
   vars_files:
     - vars/default.yml
     - vars/settings.yml
-    - vars/database_default.yml
+    #- vars/database_default.yml
   roles:
     - ufw
     - user
     - ssh
     - dart
     - docker
-    - postgres_db
-    - redis_db
+    #- postgres_db
+    #- redis_db
     - docker_clear
     - log
