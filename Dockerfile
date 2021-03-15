@@ -10,7 +10,7 @@ ARG UBUNTU_VERSION=latest
 # :: library image ::    image to compile library binaries
 FROM google/dart:$DART_LIBRARY_VERSION as libraryimage
 # install dependencies
-RUN apt -y update && apt -y install git make gcc zip gnupg2 procps curl wget
+RUN apt -y update && apt -y install git make gcc gnupg2 procps curl wget
 RUN mkdir /root/home && mkdir /root/home/data
 WORKDIR /root/home
 # create backup binary, will be used as cron job
@@ -46,15 +46,16 @@ FROM pre-prod-build as prod-sources
 WORKDIR /
 # get dart backend sources -> ssh access here needed
 RUN --mount=type=ssh git clone git@gitlab.com:movementfamily/dart_backend.git && cd dart_backend && git checkout dev && git pull --recurse-submodules && git submodule update --init
+RUN cd dart_backend/dependencies/aqueduct && pub get && cd ../.. && pub get
 
 FROM prod-sources as prod-build
-# install aqueduct
-#RUN cd dart_backend/dependencies/aqueduct && pub get --no-precompile && cd ../..  && pub get --no-precompile && pub global activate --source path dependencies/aqueduct
-# compile server
-RUN cd dart_backend/dependencies/aqueduct && pub get && cd ../.. && pub get
-#&& cd ../.. #&& pub global run aqueduct build
 # rename directory && bundle project
 RUN mv -T dart_backend backend && tar cvzf server.tar.gz /backend && cp server.tar.gz /root/server.tar.gz && chmod 0755 /root/server.tar.gz
+# install aqueduct
+RUN cd backend/dependencies/aqueduct && pub get --no-precompile && cd ../..  && pub get --no-precompile && pub global activate --source path dependencies/aqueduct
+RUN cd backend/dependencies/aqueduct && pub get
+# build aot snapshot
+#&& cd ../.. #&& pub global run aqueduct build
 
 # :: dev build ::
 FROM baseimage as dev-build

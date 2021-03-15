@@ -1,0 +1,17 @@
+---
+- name: Kill previous sessions on local port
+  shell: ps -ef | grep -iE -- "ss[h].*{{ postgres_container_port }}" | awk '{print $2}' | xargs kill -9
+  delegate_to: localhost
+  ignore_errors: yes
+
+- name: Create SSH tunnel
+  shell: "ssh -fN -L {{ postgres_container_port }}:localhost:{{ postgres_container_port }} {{ username }}@{{ ansible_host }}"
+  delegate_to: localhost
+
+- name: Upgrade database
+  shell: "cd /backend && pub global run aqueduct db upgrade --connect postgres://{{ postgres_db_user }}:{{ postgres_db_password }}@localhost:{{ postgres_container_port }}/{{ postgres_db_name }}"
+  delegate_to: localhost
+
+- name: Killing SSH tunnel
+  shell: ps -ef | grep -iE -- "ss[h].*{{ postgres_container_port }}" | awk '{print $2}' | xargs kill -9
+  delegate_to: localhost
