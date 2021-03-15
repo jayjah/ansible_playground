@@ -21,12 +21,12 @@
     from_port: "22"
     to_port: "{{ grafana_port }}"
 
-- name: Allow incoming access vom localhost
-  ufw:
-    rule: allow
-    direction: in
-    proto: any
-    from_ip: 127.0.0.1
+#- name: Allow incoming access vom localhost
+#  ufw:
+#    rule: allow
+#    direction: in
+#    proto: any
+#    from_ip: 127.0.0.1
 
 - name: Create prometheus directory
   file:
