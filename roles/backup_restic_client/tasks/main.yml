@@ -80,11 +80,21 @@
         RESTIC_PASSWORD: "{{ restic_client_password }}"
       ignore_errors: yes
 
-    - name: make backup
-      shell:
-        chdir: "/home/{{ username }}/backup/"
-        cmd: "./backup_runtime.sh make --name {{ name }}"
-      args:
-        executable: /bin/bash
-      become: no
-      become_user: "{{ username }}"
+    #- name: make backup
+    #  shell:
+    #    chdir: "/home/{{ username }}/backup/"
+    #    cmd: "./backup_runtime.sh make --name {{ name }}"
+    #  args:
+    #    executable: /bin/bash
+    #  become: no
+    #  become_user: "{{ username }}"
+
+    - name: Creates backup cron under /etc/cron.d
+      cron:
+        name: backup
+        weekday: "*"
+        minute: "0"
+        hour: "6"
+        user: "{{ username }}"
+        job: "cd /home/{{ username }}/backup && /home/{{ username }}/backup/backup_runtime.sh make --name {{ name }} > /home/{{ username }}/backup/cronlog.log 2>&1"
+      #become_user: "{{ username }}"

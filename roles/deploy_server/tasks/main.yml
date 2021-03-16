@@ -44,14 +44,6 @@
       max-size: 10m
       labels: backend-dart
       max-file: '3'
-    healthcheck:
-      # Check if server is healthy by curl'ing the server.
-      # If this fails or timeouts, the healthcheck fails.
-      test: [ "CMD", "curl", "--fail", "http://localhost:{{ server_port }}/v3/status/ping" ]
-      interval: 1m30s
-      timeout: 10s
-      retries: 3
-      start_period: 30s
 
 - name: Deploy public static files
   include: copy_public_files.yml
