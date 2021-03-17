@@ -55,6 +55,21 @@ services:
       - prometheus
     restart: unless-stopped
 
+  blackbox:
+    image: prom/blackbox-exporter:master
+    privileged: true
+    container_name: blackbox
+    expose:
+      - {{ blackbox_port }}
+    network_mode: host
+    command:
+      - "--config.file=/config/blackbox.yaml"
+    volumes:
+      - ./blackbox.yaml:/config/blackbox.yaml
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
 volumes:
   prometheusdata:
     driver: local

@@ -9,7 +9,7 @@
 
 - name: Load image
   docker_image:
-    name: "{{ server_container_name }}"
+    name: "{{ server_container_name }}-{{ name }}"
     load_path: "/home/{{ username }}/backend/{{ server_archive_name }}.tar"
     source: load
 

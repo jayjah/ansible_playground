@@ -17,7 +17,7 @@
 
 - name: Start postgres db container
   docker_container:
-    name: "{{ postgres_container_name }}"
+    name: "{{ postgres_container_name }}-{{ name }}"
     image: "postgres:{{ postgres_version }}"
     state: started
     recreate: false

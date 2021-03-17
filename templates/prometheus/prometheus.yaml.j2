@@ -1,6 +1,6 @@
 global:
   scrape_interval:     {{ scrape_interval }} # By default, scrape targets every 15 seconds.
-
+  evaluation_interval: {{ scrape_interval }}
   external_labels:
     monitor: 'server-monitor'
 
@@ -29,6 +29,24 @@ scrape_configs:
     basic_auth:
       username: {{ hostvars[groups['resticclients'][0]]['restic_client_user'] }}
       password: {{ hostvars[groups['resticclients'][0]]['restic_client_password'] }}
+  - job_name: 'blackbox'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]  # Look for a HTTP 200 response.
+    scheme: http
+    static_configs:
+      - targets:
+        {% for item in blackbox_urls -%}
+        - {{ item.url }}
+        {% endfor %}
+
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 127.0.0.1:{{ blackbox_port }}
 
   {% for item in groups['servers'] if hostvars[item]['name'] != 'metricsandbackups' -%}
   - job_name: '{{ hostvars[item]['name'] }}-cadvisor'

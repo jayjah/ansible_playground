@@ -5,14 +5,18 @@ groups:
   - alert: InstanceDown
     expr: up == 0
     for: 5m
+    labels:
+      severity: critical
     annotations:
-      summary: "Server-Instance  down"
+      summary: Server-Instance  down
 
-  - alert: EndpointDown
+  - alert: HTTPSFailed
     expr: probe_success == 0
-    for: 30s
+    for: 10m
+    labels:
+      severity: critical
     annotations:
-      summary: "Endpoint  down"
+      summary: Blacbkox down or HTTPS connection failed (instance {{ $labels.instance }})
 
  # - alert: PostgresqlDown
  #   expr: pg_up == 0
@@ -120,18 +124,18 @@ groups:
       summary: Host SystemD service crashed (instance {{ $labels.instance }})
       description: SystemD service crashed
 
-  - alert: DatabaseContainerKilled
-    expr: absent(container_memory_usage_bytes{name="backend-db"})
-    for: 20s
+  - alert: MovementFamDatabaseContainerKilled
+    expr: absent(container_memory_usage_bytes{name="backend-db-movementfam"})
+    for: 15s
     labels:
       severity: critical
     annotations:
       summary: Container killed (instance {{ $labels.instance }})
       description: Backend database container has disappeared
 
-  - alert: ServerContainerKilled
-    expr: absent(container_memory_usage_bytes{name="backend-server"})
-    for: 20s
+  - alert: MovementFamServerContainerKilled
+    expr: absent(container_memory_usage_bytes{name="backend-server-movementfam"})
+    for: 15s
     labels:
       severity: critical
     annotations:

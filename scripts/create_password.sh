@@ -1,2 +1,2 @@
 #! /bin/bash
-openssl passwd -salt test test
+openssl passwd -salt "$1" "$1"

@@ -1,8 +1,8 @@
 ---
-- name: Deny prometheus port
+- name: Allow prometheus port
   ufw: rule=deny port={{ prometheus_port }} proto=tcp
 
-- name: Deny grafana port
+- name: Allow grafana port
   ufw: rule=deny port={{ grafana_port }} proto=tcp
 
 - name: Allow incoming access to prometheus from grafana port
@@ -12,6 +12,34 @@
     proto: any
     from_port: "{{ grafana_port }}"
     to_port: "{{ prometheus_port }}"
+
+- name: Allow incoming access from port 22
+  ufw:
+    rule: allow
+    direction: in
+    proto: any
+    from_port: "22"
+    to_port: "{{ prometheus_port }}"
+
+- name: Allow all access from subnet network to prometheus
+  ufw:
+    rule: allow
+    direction: in
+    proto: any
+    src: '{{ item }}'
+    to_port: "{{ prometheus_port }}"
+  loop:
+    - "{{ default_server_network_ip_range }}"
+
+- name: Allow all access from subnet network to prometheus
+  ufw:
+    rule: allow
+    direction: in
+    proto: any
+    src: '{{ item }}'
+    to_port: "{{ grafana_port }}"
+  loop:
+    - "{{ default_server_network_ip_range }}"
 
 - name: Allow incoming access from port 22
   ufw:
@@ -92,6 +120,12 @@
     src: templates/prometheus/alert.rules
     dest: "/home/{{ username }}/prometheus/alert.rules"
     remote_src: false
+
+- name: Install blackbox.yaml file
+  template:
+    src: templates/prometheus/blackbox.yaml.j2
+    dest: "/home/{{ username }}/prometheus/blackbox.yaml"
+    force: yes
 
 - name: Install alertmanager.yaml file
   template:

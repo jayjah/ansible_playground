@@ -74,3 +74,14 @@ Written by @jayjah(jayjah1) <markuskrebs93@gmail.com>
 - set up an ansible server instance with docker build.
 
 
+
+#### Instructions for adding a new backend server:
+
+- add server in vars/create_default.yml
+- run `ansible-playbook create-server.yml`
+ -> add created server in vars/hosts
+ -> adjust templates/prometheus/alert.rules with created server to receive alerts from this host
+- run all needed playbooks
+
+
+

@@ -27,7 +27,7 @@
 
 - name: Run server
   docker_container:
-    name: "{{ server_container_name }}"
+    name: "{{ server_container_name }}-{{ name }}"
     image: "{{ backend_docker_image_name }}"
     state: started
     recreate: true
