@@ -1,8 +1,8 @@
 ---
-- name: Allow prometheus port
+- name: Deny prometheus port
   ufw: rule=deny port={{ prometheus_port }} proto=tcp
 
-- name: Allow grafana port
+- name: Deny grafana port
   ufw: rule=deny port={{ grafana_port }} proto=tcp
 
 - name: Allow incoming access to prometheus from grafana port
@@ -13,13 +13,21 @@
     from_port: "{{ grafana_port }}"
     to_port: "{{ prometheus_port }}"
 
-- name: Allow incoming access from port 22
+- name: Allow incoming access from port 22 to prometheus
   ufw:
     rule: allow
     direction: in
     proto: any
     from_port: "22"
     to_port: "{{ prometheus_port }}"
+
+- name: Allow incoming access from port 22 to grafana
+  ufw:
+    rule: allow
+    direction: in
+    proto: any
+    from_port: "22"
+    to_port: "{{ grafana_port }}"
 
 - name: Allow all access from subnet network to prometheus
   ufw:
@@ -31,7 +39,7 @@
   loop:
     - "{{ default_server_network_ip_range }}"
 
-- name: Allow all access from subnet network to prometheus
+- name: Allow all access from subnet network to grafana
   ufw:
     rule: allow
     direction: in
@@ -40,14 +48,6 @@
     to_port: "{{ grafana_port }}"
   loop:
     - "{{ default_server_network_ip_range }}"
-
-- name: Allow incoming access from port 22
-  ufw:
-    rule: allow
-    direction: in
-    proto: any
-    from_port: "22"
-    to_port: "{{ grafana_port }}"
 
 #- name: Allow incoming access vom localhost
 #  ufw:
