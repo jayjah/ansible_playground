@@ -1,0 +1,11 @@
+---
+- name: Install and update required packages
+  apt:  update_cache=yes name={{ item }} state=latest
+  loop: [ 'aptitude', 'git-core', 'git', 'ufw', 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools', 'apache2-utils', 'snap', 'python-simplejson', 'zip', 'unzip', 'tmux' ]
+
+- name: Install python packages
+  pip: name={{ item }}
+  loop: [ 'docker', 'passlib' ]
+
+- name: Clear packages
+  apt: autoclean=yes autoremove=yes

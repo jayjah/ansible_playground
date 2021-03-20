@@ -7,5 +7,6 @@
     - vars/default.yml
   roles:
     - os_update
+    - default_packages
     - docker_clear
     - log
