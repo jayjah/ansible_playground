@@ -10,40 +10,21 @@
 
 - name: Build server image from repository
   include: build_docker_image.yml
-  when: build_from_archive == False
+  when: build_from_repo == True
 
 - name: Load server image from archive
   include: load_from_archive.yml
-  when: build_from_archive == True
+  when: load_from_archive == True
 
-- name: Create server keys_config env file
-  template:
-    src: templates/server_deploy/keys_config.env.j2
-    dest: "/home/{{ username }}/backend/keys_config.env"
-    owner: "{{ username }}"
-    group: "{{ username }}"
-    mode: 0700
-    force: yes
+- include: copy_env_file.yml
 
-- name: Run server
-  docker_container:
-    name: "{{ server_container_name }}-{{ name }}"
-    image: "{{ backend_docker_image_name }}"
-    state: started
-    recreate: true
-    restart: false
-    restart_policy: unless-stopped
-    published_ports:
-      - "{{ server_port }}:{{ server_port }}"
-    volumes:
-      - "/home/{{ username }}/backend/public:/app/public"
-    env_file: "/home/{{ username }}/backend/keys_config.env"
-    output_logs: yes
-    log_driver: json-file
-    log_options:
-      max-size: 10m
-      labels: backend-dart
-      max-file: '3'
+- name: Load and run server image from registry
+  include: load_from_registry.yml
+  when: load_from_registry == True
+
+- name: Run server from local image
+  include: run_server_from_local_image.yml
+  when: load_from_registry == False
 
 - name: Deploy public static files
   include: copy_public_files.yml

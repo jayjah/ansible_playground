@@ -1,0 +1,21 @@
+---
+- name: Run new image from registry
+  docker_container:
+    name: "{{ server_container_name }}-{{ name }}"
+    image: "{{ server_registry_url }}{{ server_registry_image_name }}"
+    recreate: true
+    restart: false
+    restart_policy: unless-stopped
+    published_ports:
+      - "{{ server_port }}:{{ server_port }}"
+    volumes:
+      - "/home/{{ username }}/backend/public:/app/public"
+    env_file: "/home/{{ username }}/backend/keys_config.env"
+    output_logs: yes
+    interactive: yes
+    pull: yes
+    log_driver: json-file
+    log_options:
+      max-size: 10m
+      labels: backend-dart
+      max-file: '3'
