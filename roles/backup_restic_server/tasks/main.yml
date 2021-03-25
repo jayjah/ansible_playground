@@ -14,6 +14,7 @@
     name: "{{ item.name }}"
     password: "{{ item.password }}"
   loop: "{{ restic_repos }}"
+  no_log: True
 
 - name: Start restic server container
   docker_container:
@@ -40,3 +41,4 @@
 - name: Create users in restic server itself for each project
   shell: "docker exec -it restic_server create_user {{ item.name }} {{ item.password }}"
   loop: "{{ restic_repos }}"
+  no_log: True

@@ -48,6 +48,15 @@ scrape_configs:
       - target_label: __address__
         replacement: 127.0.0.1:{{ blackbox_port }}
 
+  {% for item in healthcheck_urls -%}
+  - job_name: '{{ item.name }}'
+    scrape_interval: 60s
+    scheme: https
+    metrics_path: '{{ item.url }}'
+    static_configs:
+      - targets: ['healthchecks.io']
+  {% endfor %}
+
   {% for item in groups['servers'] if hostvars[item]['name'] != 'metricsandbackups' -%}
   - job_name: '{{ hostvars[item]['name'] }}-cadvisor'
     static_configs:

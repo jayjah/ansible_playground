@@ -18,6 +18,14 @@ groups:
     annotations:
       summary: Blacbkox down or HTTPS connection failed (instance {{ $labels.instance }})
 
+  - alert: CronDown
+    expr: sum(hc_checks_down_total) == 1
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: CronJob Down (instance {{ $labels.instance }})
+
  # - alert: PostgresqlDown
  #   expr: pg_up == 0
  #   for: 0m

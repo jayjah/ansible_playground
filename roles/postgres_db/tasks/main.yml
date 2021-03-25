@@ -13,6 +13,7 @@
     direction: in
     proto: any
     from_port: "{{ server_port }}"
+    from_ip: 127.0.0.1
     to_port: "{{ postgres_container_port }}"
 
 - name: Start postgres db container
@@ -36,3 +37,4 @@
       POSTGRES_PASSWORD: "{{ postgres_db_password }}"
       POSTGRES_USER: "{{ postgres_db_user }}"
   when: enable_postgres == True and inventory_hostname != 'metricsandbackups'
+  no_log: True

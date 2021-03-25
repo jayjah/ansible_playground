@@ -79,6 +79,7 @@
       environment:
         RESTIC_PASSWORD: "{{ restic_client_password }}"
       ignore_errors: yes
+      no_log: True
 
     #- name: make backup
     #  shell:

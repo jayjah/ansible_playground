@@ -38,6 +38,7 @@
     shell: /bin/bash
     update_password: always
     state: present
+  no_log: True
 
 - name: Add authorized server key
   authorized_key:
