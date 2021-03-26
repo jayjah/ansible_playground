@@ -14,6 +14,7 @@
     - ssh
     - dart
     - docker
+    - docker_registries
     #- postgres_db
     #- redis_db
     - docker_clear

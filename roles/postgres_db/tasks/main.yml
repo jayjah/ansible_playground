@@ -7,13 +7,10 @@
     from_port: "22"
     to_port: "{{ postgres_container_port | quote }}"
 
-- name: Allow incoming access from server port to db port
+- name: Allow incoming access to db
   ufw:
     rule: allow
-    direction: in
-    proto: any
-    from_port: "{{ server_port | quote }}"
-    to_port: "{{ postgres_container_port | quote }}"
+    port: "{{ postgres_container_port | quote }}"
 
 - name: Start postgres db container
   docker_container:

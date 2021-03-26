@@ -17,7 +17,7 @@
   ufw: rule=limit name=OpenSSH
 
 - name: Allow server port
-  ufw: rule=allow port={{ server_port }} proto=tcp
+  ufw: rule=allow port={{ server_port | quote }} proto=tcp
   when: inventory_hostname != 'metricsandbackups'
 
 - name: Allow all access from subnet network to this host

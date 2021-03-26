@@ -41,5 +41,3 @@
 
 - name: Start docker service
   service: name=docker state=started
-
-- include: docker_registries.yml

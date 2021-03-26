@@ -10,6 +10,7 @@
     - vars/deploy_configs/movementfam_default.yml
     - vars/database_default.yml
   roles:
+    - docker_registries
     - deploy_server
     - docker_clear
     - log

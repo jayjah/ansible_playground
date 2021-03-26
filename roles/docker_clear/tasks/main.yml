@@ -1,6 +1,6 @@
 ---
 - name: Clear docker, prune docker system
-  shell: docker system prune -f
+  shell: docker system prune -a -f
   args:
     executable: /bin/bash
   become_user: "{{ username }}"
