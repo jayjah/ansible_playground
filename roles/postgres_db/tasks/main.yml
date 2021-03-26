@@ -5,16 +5,15 @@
     direction: in
     proto: any
     from_port: "22"
-    to_port: "{{ postgres_container_port }}"
+    to_port: "{{ postgres_container_port | quote }}"
 
 - name: Allow incoming access from server port to db port
   ufw:
     rule: allow
     direction: in
     proto: any
-    from_port: "{{ server_port }}"
-    from_ip: 127.0.0.1
-    to_port: "{{ postgres_container_port }}"
+    from_port: "{{ server_port | quote }}"
+    to_port: "{{ postgres_container_port | quote }}"
 
 - name: Start postgres db container
   docker_container:
