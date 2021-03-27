@@ -12,6 +12,12 @@
     rule: allow
     port: "{{ postgres_container_port | quote }}"
 
+- name: Ensure database directory exist
+  file:
+    state: directory
+    path: "/home/{{ username }}/database"
+    mode: 0755
+
 - name: Start postgres db container
   docker_container:
     name: "{{ postgres_container_name }}-{{ name }}"
@@ -20,8 +26,12 @@
     recreate: false
     restart: false
     restart_policy: unless-stopped
+    volumes:
+      - "/home/{{ username }}/database:/var/lib/postgresql/data"
     published_ports: 
       - "{{ postgres_container_port }}:5432"
+    interactive: yes
+    tty: yes
     output_logs: yes
     log_driver: json-file
     log_options:
@@ -32,5 +42,6 @@
       POSTGRES_DB: "{{ postgres_db_name }}"
       POSTGRES_PASSWORD: "{{ postgres_db_password }}"
       POSTGRES_USER: "{{ postgres_db_user }}"
-  when: enable_postgres == True and inventory_hostname != 'metricsandbackups'
+      PGDATA: '/var/lib/postgresql/data/pgdata'
+  when: inventory_hostname != 'metricsandbackups'
   no_log: True

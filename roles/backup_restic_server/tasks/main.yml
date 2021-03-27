@@ -21,14 +21,16 @@
     name: restic_server
     image: "restic/rest-server:latest"
     state: started
-    recreate: false
-    restart: yes
+    recreate: yes
+    restart: false
     pull: yes
     restart_policy: unless-stopped
     published_ports:
       - "{{ restic_port }}:8000"
     volumes:
       - /tmp/backups:/data
+    interactive: yes
+    tty: yes
     output_logs: yes
     log_driver: json-file
     log_options:

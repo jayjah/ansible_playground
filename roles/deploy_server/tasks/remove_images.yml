@@ -8,3 +8,9 @@
   docker_image:
     name: "{{ backend_docker_image_name }}"
     state: absent
+
+- name: Clear docker, prune docker system
+  shell: docker system prune -a -f
+  args:
+    executable: /bin/bash
+  become_user: "{{ username }}"

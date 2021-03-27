@@ -14,6 +14,7 @@
     env_file: "/home/{{ username }}/backend/keys_config.env"
     output_logs: yes
     interactive: yes
+    tty: yes
     log_driver: json-file
     log_options:
       max-size: 10m
