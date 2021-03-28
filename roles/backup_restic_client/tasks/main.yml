@@ -81,14 +81,14 @@
       ignore_errors: yes
       no_log: True
 
-    #- name: make backup
-    #  shell:
-    #    chdir: "/home/{{ username }}/backup/"
-    #    cmd: "./backup_runtime.sh make --name {{ name }}"
-    #  args:
-    #    executable: /bin/bash
-    #  become: no
-    #  become_user: "{{ username }}"
+    - name: make backup
+      shell:
+        chdir: "/home/{{ username }}/backup/"
+        cmd: "./backup_runtime.sh make --name {{ name }}"
+      args:
+        executable: /bin/bash
+      become: no
+      become_user: "{{ username }}"
 
     - name: Creates backup cron under /etc/cron.d
       cron:
