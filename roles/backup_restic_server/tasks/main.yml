@@ -21,8 +21,8 @@
     name: restic_server
     image: "restic/rest-server:latest"
     state: started
-    recreate: yes
-    restart: false
+    recreate: false
+    restart: true
     #pull: yes
     restart_policy: unless-stopped
     published_ports:
