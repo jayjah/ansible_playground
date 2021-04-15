@@ -23,7 +23,7 @@
     state: started
     recreate: yes
     restart: false
-    pull: yes
+    #pull: yes
     restart_policy: unless-stopped
     published_ports:
       - "{{ restic_port }}:8000"
