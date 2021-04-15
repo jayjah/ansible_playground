@@ -8,8 +8,11 @@
     restart_policy: unless-stopped
     published_ports:
       - "{{ server_port }}:{{ server_port }}"
-    volumes:
-      - "/home/{{ username }}/backend/public:/app/public"
+    mounts:
+      - read_only: no
+      - type: bind
+      - source: "/home/{{ username }}/backend/public"
+      - target: "/app/public"
     env_file: "/home/{{ username }}/backend/keys_config.env"
     output_logs: yes
     interactive: yes
