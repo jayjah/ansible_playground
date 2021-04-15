@@ -1,0 +1,30 @@
+---
+- name: Ensure seed directory exist
+  file:
+    state: directory
+    path: "/home/{{ username }}/seed"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0755
+
+- name: Copy seed data archive to remote host and decompress it
+  unarchive:
+    src: "/root/home/files/{{ seed_data_archive_name }}"
+    dest: "/home/{{ username }}/seed"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0755
+    remote_src: false
+  no_log: True
+
+- name: Get files from seed dir
+  find:
+    paths: "/home/{{ username }}/seed"
+    file_type: file
+  register: seeds
+  no_log: True
+
+- name: Seeding data
+  shell: "cd /backend && dart bin/cli.dart dbutil seed -f --path=/home/{{ username }}/seed"
+  delegate_to: localhost
+  no_log: True

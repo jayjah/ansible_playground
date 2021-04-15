@@ -14,6 +14,10 @@
   delegate_to: localhost
   no_log: True
 
+- name: Seed data to database
+  include: seed_data.yml
+  when: seed_data == True
+
 - name: Killing SSH tunnel
   shell: ps -ef | grep -iE -- "ss[h].*{{ postgres_container_port }}" | awk '{print $2}' | xargs kill -9
   delegate_to: localhost
