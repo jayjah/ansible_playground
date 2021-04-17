@@ -1,0 +1,21 @@
+{% set fcm_key = lookup('vars', 'server_' + name + '_fcm_key') -%}
+{% set ssl_secret = lookup('vars', 'server_' + name + '_ssl_secret') -%}
+{% set email_address = lookup('vars', 'server_' + name + '_email_address') -%}
+{% set email_error_address = lookup('vars', 'server_' + name + '_email_error_address') -%}
+{% set email_to_report_to = lookup('vars', 'server_' + name + '_email_to_report_to') -%}
+{% set password_salt = lookup('vars', 'server_' + name + '_password_salt') -%}
+{% set wordpress_user = lookup('vars', 'server_' + name + '_wordpress_user') -%}
+{% set wordpress_token = lookup('vars', 'server_' + name + '_wordpress_token') -%}
+{% set client_config_token = lookup('vars', 'server_' + name + '_client_config_token') -%}
+fcmKey: {{ fcm_key }}
+sslSecret: {{ ssl_secret }}
+emailAddress: {{ email_address }}
+emailErrorAddress: {{ email_error_address }}
+emailAddressName: {{ name }}-App
+emailToReportTo: {{ email_to_report_to }}
+mailjetPrivate: {{ server_mailjet_private }}
+mailjetPublic: {{ server_mailjet_public }}
+passwordSalt: {{ password_salt }}
+wordpressUser: {{ wordpress_user }}
+wordpressToken: {{ wordpress_token }}
+clientConfigToken: {{ client_config_token }}

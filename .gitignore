@@ -34,3 +34,4 @@ release.*
 public.*
 public_*
 *_public
+files/seed.tar.gz

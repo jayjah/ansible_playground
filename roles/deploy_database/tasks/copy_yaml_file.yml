@@ -1,0 +1,8 @@
+---
+- name: Create server keys_config yaml file
+  template:
+    src: templates/server_deploy/keys_config.yaml.j2
+    dest: "/backend/keys_config.yaml"
+    mode: 0700
+    force: yes
+  delegate_to: localhost

@@ -1,30 +1,21 @@
 ---
-- name: Ensure seed directory exist
+- include: copy_yaml_file.yml
+
+- name: Ensure seed dir exist
   file:
     state: directory
-    path: "/home/{{ username }}/seed"
-    owner: "{{ username }}"
-    group: "{{ username }}"
+    path: "/root/seed"
     mode: 0755
+  delegate_to: localhost
 
-- name: Copy seed data archive to remote host and decompress it
+- name: Decompress seed files
   unarchive:
     src: "/root/home/files/{{ seed_data_archive_name }}"
-    dest: "/home/{{ username }}/seed"
-    owner: "{{ username }}"
-    group: "{{ username }}"
+    dest: "/backend"
     mode: 0755
-    remote_src: false
-  no_log: True
-
-- name: Get files from seed dir
-  find:
-    paths: "/home/{{ username }}/seed"
-    file_type: file
-  register: seeds
-  no_log: True
+    remote_src: true
+  delegate_to: localhost
 
 - name: Seeding data
-  shell: "cd /backend && dart bin/cli.dart dbutil seed -f --path=/home/{{ username }}/seed"
+  shell: "cd /backend && dart bin/cli.dart dbutil seed -d -c"
   delegate_to: localhost
-  no_log: True
