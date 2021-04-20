@@ -29,3 +29,8 @@
 - name: Deploy public static files
   include: copy_public_files.yml
   when: deploy_public_files == True
+
+- name: Remove env file
+  file:
+    state: absent
+    path: "/home/{{ username }}/backend/keys_config.env"

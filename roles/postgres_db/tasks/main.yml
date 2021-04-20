@@ -12,6 +12,12 @@
     rule: allow
     port: "{{ postgres_container_port | quote }}"
 
+- name: Remove database data directory
+  file:
+    state: absent
+    path: "/home/{{ username }}/database"
+  when: delete_old_db_data == True
+
 - name: Ensure database directory exist
   file:
     state: directory
@@ -23,7 +29,7 @@
     name: "{{ postgres_container_name }}-{{ name }}"
     image: "postgres:{{ postgres_version }}"
     state: started
-    recreate: false
+    recreate: yes
     restart: false
     restart_policy: unless-stopped
     volumes:

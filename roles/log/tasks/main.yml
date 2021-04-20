@@ -14,6 +14,6 @@
     path: "/home/{{ username }}/backup/cronlog.log"
     state: absent
 
-# todo clear docker logs -> need to identify log files, which should be placed in /etc/docker/
+# todo clear docker logs -> need to identify log files with reg expr pattern, log files are present in /etc/docker/
 #- name: clear docker logs
 #  shell: truncate -s 0 /etc/docker/daemon.json*
