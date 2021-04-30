@@ -1,3 +1,4 @@
+{% set base_url = lookup('vars', 'server_' + name + '_base_url') -%}
 databaseLive:
  username: {{ postgres_db_user }}
  password: {{ postgres_db_password }}
@@ -47,7 +48,7 @@ serverConfig:
  deployServerConfig:
   tmuxSessionName: ""
   aotPathOnRemoteHost: ""
-  serverUrl: ""
+  serverUrl: {{ base_url }}
  containerName: {{ server_container_name }}-{{ name }}
 host: {{ server_host }}
 envPort:
