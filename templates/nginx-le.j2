@@ -63,6 +63,8 @@ server {
     		proxy_redirect off;
     		proxy_pass_request_headers on;
 
+    		add_header  'Access-Control-Expose-Headers'  '*' always;
+
     		proxy_pass http://backendservers;
     }
 }
