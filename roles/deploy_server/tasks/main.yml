@@ -34,3 +34,8 @@
   file:
     state: absent
     path: "/home/{{ username }}/backend/keys_config.env"
+
+- name: Remove env file from home
+  file:
+    state: absent
+    path: "/home/{{ username }}/keys_config.env"

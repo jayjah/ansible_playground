@@ -62,7 +62,7 @@
   copy:
     src: "/home/{{ username }}/public/files/{{ item.path | basename }}"
     dest: "/home/{{ username }}/backend/public/files/{{ item.path | basename }}"
-    force: no
+    force: yes
     mode: 0755
     remote_src: true
   loop: "{{ staticfiles.files }}"
@@ -77,7 +77,7 @@
   copy:
     src: "/home/{{ username }}/public/web/{{ item.path | basename }}"
     dest: "/home/{{ username }}/backend/public/web/{{ item.path | basename }}"
-    force: no
+    force: yes
     mode: 0755
     remote_src: true
   loop: "{{ webfiles.files }}"
