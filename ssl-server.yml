@@ -19,8 +19,8 @@
     - debug:
         msg: "Domain string: {{ domains_without_prefix.stdout }}"
 
-    - name: Upgrade system
-      apt: upgrade=dist update_cache=yes
+    #- name: Upgrade system
+    #  apt: upgrade=dist update_cache=yes
 
     - name: Install nginx
       apt: name=nginx state=latest

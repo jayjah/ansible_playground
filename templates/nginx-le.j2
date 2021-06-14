@@ -40,6 +40,11 @@ server {
 
     underscores_in_headers on;
 
+    location /grafana {
+
+        proxy_pass http://{{ metrics_grafana_network_ip }};
+    }
+
     location / {
 
             if ($request_method = 'OPTIONS') {
