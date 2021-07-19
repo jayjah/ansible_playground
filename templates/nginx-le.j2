@@ -47,6 +47,7 @@ server {
 
     location / {
 
+            # enable CORS (Cross-Origin-Resource-Sharing)
             if ($request_method = 'OPTIONS') {
                add_header 'Access-Control-Allow-Origin' '*';
                add_header 'Access-Control-Allow_Credentials' 'true';

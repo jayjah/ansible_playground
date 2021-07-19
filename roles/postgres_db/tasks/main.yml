@@ -39,11 +39,11 @@
     interactive: yes
     tty: yes
     output_logs: yes
-    log_driver: json-file
-    log_options:
-      max-size: 10m
-      labels: postgres
-      max-file: '3'
+    #log_driver: json-file
+    #log_options:
+    #  max-size: 10m
+    #  labels: postgres
+    #  max-file: '3'
     env:
       POSTGRES_DB: "{{ postgres_db_name }}"
       POSTGRES_PASSWORD: "{{ postgres_db_password }}"

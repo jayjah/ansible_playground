@@ -15,8 +15,8 @@
     output_logs: yes
     interactive: yes
     tty: yes
-    log_driver: json-file
-    log_options:
-      max-size: 10m
-      labels: backend-dart
-      max-file: '3'
+    #log_driver: json-file
+    #log_options:
+    #  max-size: 10m
+    #  labels: backend-dart
+    #  max-file: '3'

@@ -1,0 +1,13 @@
+---
+- name: Docker test
+  hosts: metricsserver
+  gather_facts: false
+  become: true
+  become_user: root
+  vars_files:
+    - vars/default.yml
+    - vars/settings.yml
+    #- vars/database_default.yml
+  roles:
+    - docker
+    - docker_registries

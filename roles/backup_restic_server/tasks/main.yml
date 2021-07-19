@@ -32,11 +32,11 @@
     interactive: yes
     tty: yes
     output_logs: yes
-    log_driver: json-file
-    log_options:
-      max-size: 10m
-      max-file: '3'
-      labels: restic
+    #log_driver: json-file
+    #log_options:
+    #  max-size: 10m
+    #  max-file: '3'
+    #  labels: restic
     env:
       OPTIONS: "--private-repos --max-size 6500000000 --prometheus --path /data" # 6.5gb
 

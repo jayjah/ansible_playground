@@ -7,4 +7,3 @@
     reauthorize: yes
     state: present
   loop: '{{ docker_registries }}'
-  no_log: True
