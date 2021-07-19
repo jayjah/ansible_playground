@@ -16,7 +16,7 @@
     tty: yes
     pull: yes
     #log_driver: json-file
-    #log_options:
+    log_options:
     #  max-size: 10m
-    #  labels: backend-dart
+      labels: backend-dart
     #  max-file: '3'
