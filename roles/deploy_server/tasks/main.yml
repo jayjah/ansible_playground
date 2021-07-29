@@ -23,7 +23,7 @@
   when: load_from_registry == True
 
 - name: Run server from local image
-  include: run_server_from_local_image.yml
+  include: run_server_from_image.yml
   when: load_from_registry == False
 
 - name: Deploy public static files
