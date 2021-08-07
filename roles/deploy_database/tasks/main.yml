@@ -4,6 +4,9 @@
 #  delegate_to: localhost
 #  ignore_errors: yes
 
+- name: Preparation for migration
+  include: prepare_migration.yml
+
 - name: Create SSH tunnel
   shell: "ssh -fN -L {{ postgres_container_port }}:localhost:{{ postgres_container_port }} {{ username }}@{{ ansible_host }}"
   delegate_to: localhost
