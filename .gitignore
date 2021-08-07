@@ -1,6 +1,6 @@
 # Created by https://www.toptal.com/developers/gitignore/api/ansible
 # Edit at https://www.toptal.com/developers/gitignore?templates=ansible
-
+files/
 ### Ansible ###
 *.retry
 *ansible.log
