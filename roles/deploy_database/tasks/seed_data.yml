@@ -1,12 +1,19 @@
 ---
 - include: copy_yaml_file.yml
 
-- name: Ensure seed dir exist
+- name: Remove old seeds directory
   file:
-    state: directory
-    path: "/root/seed"
-    mode: 0755
+    path: "/backend/res/seeds"
+    state: absent
   delegate_to: localhost
+  become: true
+
+- name: Create fresh migrations folder
+  file:
+    path: "/backend/res/seeds"
+    state: directory
+  delegate_to: localhost
+  become: true
 
 - name: Decompress seed files
   unarchive:
