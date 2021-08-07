@@ -10,8 +10,7 @@ ARG UBUNTU_VERSION=latest
 # :: library image ::    image to compile library binaries
 FROM google/dart:$DART_LIBRARY_VERSION as libraryimage
 # install dependencies
-RUN apt -y update && apt-get -y install git make gcc gnupg2 procps curl wget
-RUN mkdir /root/home && mkdir /root/home/data
+RUN apt -y update && apt-get -y install git make gcc gnupg2 procps curl wget && mkdir /root/home && mkdir /root/home/data
 WORKDIR /root/home
 # create backup binary, will be used as cron job
 RUN git clone https://github.com/jayjah/backder.git
@@ -48,7 +47,7 @@ RUN cd dart_backend/dependencies/aqueduct && pub get && cd ../.. && pub get
 
 FROM prod-sources as prod-build
 # rename directory && bundle project
-RUN mv -T dart_backend backend && tar cvzf server.tar.gz /backend && cp server.tar.gz /root/server.tar.gz && chmod 0755 /root/server.tar.gz
+#RUN mv -T dart_backend backend && tar cvzf server.tar.gz /backend && cp server.tar.gz /root/server.tar.gz && chmod 0755 /root/server.tar.gz
 # install aqueduct
 RUN cd backend/dependencies/aqueduct && pub get --no-precompile && cd ../..  && pub get --no-precompile && pub global activate --source path dependencies/aqueduct
 RUN cd backend/dependencies/aqueduct && pub get
