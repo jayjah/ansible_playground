@@ -7,6 +7,8 @@
   vars_files:
     - vars/default.yml
     - vars/settings.yml
+    - vars/docker_default.yml
+    - vars/metrics_default.yml
     #- vars/database_default.yml
   roles:
     - ufw

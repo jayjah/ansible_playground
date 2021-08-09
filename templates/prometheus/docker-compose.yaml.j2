@@ -14,6 +14,31 @@ services:
       - ./alert.rules:/etc/prometheus/alert.rules
     restart: unless-stopped
 
+  loki:
+    image: grafana/loki:2.3.0
+    expose:
+      - 3100
+    network_mode: host
+    command:
+      - "--config.file=/mnt/config/loki-config.yaml"
+    volumes:
+      - ./loki-config.yaml:/mnt/config/loki-config.yaml:ro
+    depends_on:
+      - prometheus
+
+  promtail:
+    image: grafana/promtail:2.3.0
+    volumes:
+      - log:/var/log
+    network_mode: host
+    command:
+      - "--config.file=/mnt/config/promtail-config.yaml"
+    volumes:
+      - ./promtail-config.yaml:/mnt/config/promtail-config.yaml:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    depends_on:
+      - prometheus
+
   grafana:
     image: grafana/grafana:latest
     container_name: grafana

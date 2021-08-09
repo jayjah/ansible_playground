@@ -39,6 +39,16 @@
   loop:
     - "{{ default_server_network_ip_range }}"
 
+- name: Allow all access from subnet network to loki
+  ufw:
+    rule: allow
+    direction: in
+    proto: any
+    src: '{{ item }}'
+    to_port: "{{ loki_port }}"
+  loop:
+    - "{{ default_server_network_ip_range }}"
+
 - name: Allow all access from subnet network to grafana
   ufw:
     rule: allow
@@ -107,6 +117,18 @@
   template:
     src: templates/prometheus/prometheus.yaml.j2
     dest: "/home/{{ username }}/prometheus/prometheus.yaml"
+    force: yes
+
+- name: Install loki-config.yaml file
+  template:
+    src: templates/prometheus/loki-config.yaml.j2
+    dest: "/home/{{ username }}/prometheus/loki-config.yaml"
+    force: yes
+
+- name: Install promtail-config.yaml file
+  template:
+    src: templates/prometheus/promtail-config.yaml.j2
+    dest: "/home/{{ username }}/prometheus/promtail-config.yaml"
     force: yes
 
 - name: Install docker-compose.yaml file
