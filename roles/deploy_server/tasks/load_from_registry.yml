@@ -24,7 +24,7 @@
       loki-url: "http://{{ metrics_ip }}:{{ loki_port }}/loki/api/v1/push"
       mode: "non-blocking"
       loki-retries: '5'
-      #max-size: '10m'
-      #labels: "backend"
-      #max-file: '3'
+      max-size: '10m'
+      labels: "backend"
+      max-file: '3'
       loki-batch-size: '400'
