@@ -1,4 +1,8 @@
 ---
+- name: Install docker-loki plugin
+  shell: "docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions"
+  ignore_errors: yes
+
 - name: Run new image from registry
   docker_container:
     name: "{{ server_container_name }}-{{ name }}"
@@ -15,8 +19,12 @@
     interactive: yes
     tty: yes
     pull: yes
-    #log_driver: json-file
+    log_driver: "loki"
     log_options:
-    #  max-size: 10m
-      labels: backend-dart
-    #  max-file: '3'
+      loki-url: "http://{{ metrics_ip }}:{{ loki_port }}/loki/api/v1/push"
+      mode: "non-blocking"
+      loki-retries: '5'
+      #max-size: '10m'
+      #labels: "backend"
+      #max-file: '3'
+      loki-batch-size: '400'
