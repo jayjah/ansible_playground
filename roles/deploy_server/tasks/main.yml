@@ -18,6 +18,10 @@
 
 - include: copy_env_file.yml
 
+- name: Run promtail
+  include: run_promtail.yml
+  when: promtail_on_backend_server == True
+
 - name: Load and run server image from registry
   include: load_from_registry.yml
   when: load_from_registry == True
