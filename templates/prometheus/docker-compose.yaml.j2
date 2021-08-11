@@ -30,7 +30,7 @@ services:
 
   promtail:
     image: grafana/promtail:2.3.0
-    container_name: promtail
+    container_name: promtail-metrics
     network_mode: host
     command:
       - "--config.file=/mnt/config/promtail-config.yaml"
