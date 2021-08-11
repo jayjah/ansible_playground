@@ -10,12 +10,12 @@
     published_ports:
       - "{{ cadvisor_metrics_port }}:8080"
     output_logs: yes
-    #log_driver: json-file
+    log_driver: json-file
     command: "--housekeeping_interval=20s --storage_driver_buffer_duration=0m40s --max_procs=1"
     log_options:
-    #  max-size: 10m
+      max-size: 10m
       labels: cadvisor
-    #  max-file: '3'
+      max-file: '3'
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:rw
@@ -40,8 +40,8 @@
     volumes:
       - "/:/host:ro,rslave"
     output_logs: yes
-    #log_driver: json-file
+    log_driver: json-file
     log_options:
-    #  max-size: 10m
+      max-size: 10m
       labels: node-exporter
-    #  max-file: '3'
+      max-file: '3'

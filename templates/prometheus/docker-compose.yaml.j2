@@ -3,6 +3,7 @@ version: '3.2'
 services:
   prometheus:
     image: prom/prometheus-linux-amd64:latest
+    container_name: prometheus
     expose:
       - 9090
     network_mode: host
@@ -16,6 +17,7 @@ services:
 
   loki:
     image: grafana/loki:2.3.0
+    container_name: loki
     expose:
       - 3100
     network_mode: host
@@ -28,8 +30,7 @@ services:
 
   promtail:
     image: grafana/promtail:2.3.0
-    volumes:
-      - log:/var/log
+    container_name: promtail
     network_mode: host
     command:
       - "--config.file=/mnt/config/promtail-config.yaml"

@@ -1,8 +1,4 @@
 ---
-- name: Install docker-loki plugin
-  shell: "docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions"
-  ignore_errors: yes
-
 - name: Generate Docker daemon configuration with loki file
   template:
     src: templates/daemon-loki.json.j2

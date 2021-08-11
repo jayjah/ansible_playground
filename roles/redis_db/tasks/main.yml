@@ -21,10 +21,10 @@
     interactive: yes
     tty: yes
     output_logs: yes
-    #log_driver: json-file
+    log_driver: json-file
     log_options:
-    #  max-size: 10m
+      max-size: 10m
       labels: redis
-    #  max-file: '3'
+      max-file: '3'
   loop: "{{ redis_db_server_list }}"
   when: enable_redis == True and inventory_hostname != 'metricsandbackups'
