@@ -5,9 +5,14 @@
     dest: "/home/{{ username }}/promtail-config.yaml"
     force: yes
 
-- name: Run promtail docker image
+- name: Remove old promtail container
   docker_container:
-    name: "promtail-{{ inventory_hostname }}"
+    name: promtail-{{ inventory_hostname }}
+    state: absent
+
+- name: Run promtail docker container
+  docker_container:
+    name: promtail-{{ inventory_hostname }}
     image: "grafana/promtail:2.3.0"
     recreate: true
     restart: false
