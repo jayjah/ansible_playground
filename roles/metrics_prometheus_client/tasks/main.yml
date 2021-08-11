@@ -1,7 +1,12 @@
 ---
+- name: Remove old cadvisor container
+  docker_container:
+    name: cadvisor-{{ inventory_hostname }}
+    state: absent
+
 - name: Start cadvisor container (docker metrics)
   docker_container:
-    name: cadvisor
+    name: cadvisor-{{ inventory_hostname }}
     image: gcr.io/cadvisor/cadvisor
     state: started
     recreate: yes
@@ -24,9 +29,14 @@
       # to collect data from docker on macos host:
       - /var/run/docker.sock:/var/run/docker.sock:rw
 
+- name: Remove old node-exporter container
+  docker_container:
+    name: node-exporter-{{ inventory_hostname }}
+    state: absent
+
 - name: Start node-exporter container (os metrics)
   docker_container:
-    name: node-exporter
+    name: node-exporter-{{ inventory_hostname }}
     image: prom/node-exporter
     state: started
     recreate: yes
