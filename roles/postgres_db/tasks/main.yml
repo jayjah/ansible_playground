@@ -45,6 +45,7 @@
       labels: postgres
       max-file: '3'
     env:
+      TZ: "{{ time_zone }}"
       POSTGRES_DB: "{{ postgres_db_name }}"
       POSTGRES_PASSWORD: "{{ postgres_db_password }}"
       POSTGRES_USER: "{{ postgres_db_user }}"

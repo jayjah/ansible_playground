@@ -4,7 +4,7 @@
   gather_facts: true
   user: "{{ username }}"
   vars_files:
-    - vars/default.yml
+    - vars/appwrite_default.yml
     - vars/settings.yml
     - vars/deploy_configs/server_deploy_default.yml
     - vars/deploy_configs/movementfam_default.yml
