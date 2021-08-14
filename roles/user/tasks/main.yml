@@ -33,12 +33,13 @@
 - name: Create default user
   user:
     name: "{{ username }}"
+    uid: "{{ username_uid }}"
     groups: sudo, docker, restic
     password: "{{ password }}"
     shell: /bin/bash
     update_password: always
     state: present
-  no_log: True
+    no_log: True
 
 - name: Add authorized server key
   authorized_key:
