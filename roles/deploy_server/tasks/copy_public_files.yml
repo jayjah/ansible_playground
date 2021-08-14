@@ -1,35 +1,11 @@
 ---
-- name: Ensure public/images exist
-  file:
-    state: directory
-    path: "/home/{{ username }}/backend/public/images"
-    owner: "{{ username }}"
-    group: "{{ username }}"
-    mode: 0755
-
-- name: Ensure public/files exist
-  file:
-    state: directory
-    path: "/home/{{ username }}/backend/public/files"
-    owner: "{{ username }}"
-    group: "{{ username }}"
-    mode: 0755
-
-- name: Ensure public/web exist
-  file:
-    state: directory
-    path: "/home/{{ username }}/backend/public/web"
-    owner: "{{ username }}"
-    group: "{{ username }}"
-    mode: 0755
-
 - name: Copy public archive to remote host and decompress it
   unarchive:
     src: "/root/home/files/{{ server_public_archive_name }}"
     dest: "/home/{{ username }}"
     owner: "{{ username }}"
-    group: "{{ username }}"
-    mode: 0755
+    group: "{{ username_uid }}"
+    mode: 0777
     remote_src: false
 
 - name: Get images from public dir
@@ -38,31 +14,35 @@
     file_type: file
   register: images
 
-- name: images from archive file
-  debug:
-    msg: "{{ item.path | basename }}"
-  loop: "{{ images.files }}"
+#- name: images from archive file
+#  debug:
+#    msg: "{{ item.path | basename }}"
+#  loop: "{{ images.files }}"
 
 - name: Copy new images to backend directory
   copy:
     src: "/home/{{ username }}/public/images/{{ item.path | basename }}"
     dest: "/home/{{ username }}/backend/public/images/{{ item.path | basename }}"
-    force: no
-    mode: 0755
+    force: true
+    owner: "{{ username }}"
+    group: "{{ username_uid }}"
+    mode: 0777
     remote_src: true
   loop: "{{ images.files }}"
 
-- name: Get files from public dir
+- name: Get static files from public dir
   find:
     paths: "/home/{{ username }}/public/files"
     file_type: file
   register: staticfiles
 
-- name: Copy new files to backend directory
+- name: Copy new static files to backend directory
   copy:
     src: "/home/{{ username }}/public/files/{{ item.path | basename }}"
     dest: "/home/{{ username }}/backend/public/files/{{ item.path | basename }}"
     force: yes
+    owner: "{{ username }}"
+    group: "{{ username_uid }}"
     mode: 0755
     remote_src: true
   loop: "{{ staticfiles.files }}"
@@ -78,6 +58,8 @@
     src: "/home/{{ username }}/public/web/{{ item.path | basename }}"
     dest: "/home/{{ username }}/backend/public/web/{{ item.path | basename }}"
     force: yes
+    owner: "{{ username }}"
+    group: "{{ username_uid }}"
     mode: 0755
     remote_src: true
   loop: "{{ webfiles.files }}"

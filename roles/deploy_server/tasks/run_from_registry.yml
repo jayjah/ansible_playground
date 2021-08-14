@@ -8,20 +8,16 @@
     restart_policy: unless-stopped
     published_ports:
       - "{{ server_port }}:{{ server_port }}"
-    mounts:
-      - read_only=no,type=bind,source="/home/{{ username }}/backend/public",target=/app/public
+    volumes:
+      - /home/{{ username }}/backend/public:/app/public:rw
     env_file: "/home/{{ username }}/backend/keys_config.env"
-    user: "{{ username }}"
+    #user: "{{ username }}:{{ username_uid }}"
     output_logs: yes
     interactive: yes
     tty: yes
     pull: yes
     log_driver: "json-file"
     log_options:
-    #  loki-url: "http://{{ metrics_ip }}:{{ loki_port }}/loki/api/v1/push"
-    #  mode: "non-blocking"
-    #  loki-retries: '5'
       max-size: '10m'
       labels: "backend"
       max-file: '3'
-    #  loki-batch-size: '400'

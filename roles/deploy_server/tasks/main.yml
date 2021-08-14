@@ -1,18 +1,6 @@
 ---
-- name: Ensure backend directory exist
-  file:
-    state: directory
-    path: "/home/{{ username }}/backend"
-    mode: 0755
-
-- name: Create server keys_config env file
-  template:
-    src: templates/server_deploy/keys_config.env.j2
-    dest: "/home/{{ username }}/backend/keys_config.env"
-    owner: "{{ username }}"
-    group: "{{ username }}"
-    mode: 0700
-    force: yes
+- name: Create relevant directories
+  include: create_directories_files.yml
 
 - name: Remove old containers
   include: clear_stop_running_server.yml
