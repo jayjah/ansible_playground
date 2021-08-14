@@ -1,9 +1,0 @@
----
-- name: Create server keys_config env file
-  template:
-    src: templates/server_deploy/keys_config.env.j2
-    dest: "/home/{{ username }}/backend/keys_config.env"
-    owner: "{{ username }}"
-    group: "{{ username }}"
-    mode: 0700
-    force: yes

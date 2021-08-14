@@ -11,6 +11,7 @@
     mounts:
       - read_only=no,type=bind,source="/home/{{ username }}/backend/public",target=/app/public
     env_file: "/home/{{ username }}/backend/keys_config.env"
+    user: "{{ username }}"
     output_logs: yes
     interactive: yes
     tty: yes

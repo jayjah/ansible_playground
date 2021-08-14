@@ -5,41 +5,29 @@
     path: "/home/{{ username }}/backend"
     mode: 0755
 
+- name: Create server keys_config env file
+  template:
+    src: templates/server_deploy/keys_config.env.j2
+    dest: "/home/{{ username }}/backend/keys_config.env"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0700
+    force: yes
+
 - name: Remove old containers
-  include: remove_images.yml
+  include: clear_stop_running_server.yml
 
-- name: Build server image from repository
-  include: build_docker_image.yml
-  when: build_from_repo == True
+- name: Run server container
+  include: run_from_registry.yml
 
-- name: Load server image from archive
-  include: load_from_archive.yml
-  when: load_from_archive == True
-
-- include: copy_env_file.yml
-
-- name: Run promtail
+- name: Run promtail container
   include: run_promtail.yml
-  when: promtail_on_backend_server == True
 
-- name: Load and run server image from registry
-  include: load_from_registry.yml
-  when: load_from_registry == True
-
-- name: Run server from local image
-  include: run_server_from_image.yml
-  when: load_from_registry == False
-
-- name: Deploy public static files
+- name: Copy public static files
   include: copy_public_files.yml
-  when: deploy_public_files == True
+  when: copy_public_files == True
 
 - name: Remove env file
   file:
     state: absent
     path: "/home/{{ username }}/backend/keys_config.env"
-
-- name: Remove env file from home
-  file:
-    state: absent
-    path: "/home/{{ username }}/keys_config.env"
