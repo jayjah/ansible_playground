@@ -9,8 +9,6 @@
     - vars/settings.yml
     - vars/docker_default.yml
     - vars/metrics_default.yml
-    #- vars/database_default.yml
   roles:
     - docker
-    #- docker_loki
     - docker_registries

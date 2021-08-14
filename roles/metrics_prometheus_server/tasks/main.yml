@@ -76,7 +76,7 @@
 
 - name: Create prometheus/dashboards directory
   file:
-    path: "/home/{{ username }}/prometheus/dashboards"
+    path: "/home/{{ username }}/metrics_prometheus_server/dashboards"
     state: directory
     owner: "{{ username }}"
     group: "{{ username }}"
@@ -100,7 +100,7 @@
 
 - name: Install prometheus/grafana rest-server.json
   copy:
-    src: templates/prometheus/dashboards/rest-server.json
+    src: templates/metrics_prometheus_server/dashboards/rest-server.json
     dest: "/home/{{ username }}/prometheus/dashboards/rest-server.json"
     owner: "{{ username }}"
     group: "{{ username }}"
@@ -109,49 +109,49 @@
 
 - name: Install grafana.ini file
   template:
-    src: templates/prometheus/grafana.ini
+    src: templates/metrics_prometheus_server/grafana.ini
     dest: "/home/{{ username }}/prometheus/grafana.ini"
     force: yes
 
 - name: Install prometheus.yaml file
   template:
-    src: templates/prometheus/prometheus.yaml.j2
+    src: templates/metrics_prometheus_server/prometheus.yaml.j2
     dest: "/home/{{ username }}/prometheus/prometheus.yaml"
     force: yes
 
 - name: Install loki-config.yaml file
   template:
-    src: templates/prometheus/loki-config.yaml.j2
+    src: templates/metrics_prometheus_server/loki-config.yaml.j2
     dest: "/home/{{ username }}/prometheus/loki-config.yaml"
     force: yes
 
 - name: Install promtail-config.yaml file
   template:
-    src: templates/prometheus/promtail-config.yaml.j2
+    src: templates/metrics_prometheus_server/promtail-config.yaml.j2
     dest: "/home/{{ username }}/prometheus/promtail-config.yaml"
     force: yes
 
 - name: Install docker-compose.yaml file
   template:
-    src: templates/prometheus/docker-compose.yaml.j2
+    src: templates/metrics_prometheus_server/docker-compose.yaml.j2
     dest: "/home/{{ username }}/prometheus/docker-compose.yaml"
     force: yes
 
 - name: Install alert.rules file
   copy:
-    src: templates/prometheus/alert.rules
+    src: templates/metrics_prometheus_server/alert.rules
     dest: "/home/{{ username }}/prometheus/alert.rules"
     remote_src: false
 
 - name: Install blackbox.yaml file
   template:
-    src: templates/prometheus/blackbox.yaml.j2
+    src: templates/metrics_prometheus_server/blackbox.yaml.j2
     dest: "/home/{{ username }}/prometheus/blackbox.yaml"
     force: yes
 
 - name: Install alertmanager.yaml file
   template:
-    src: templates/prometheus/alertmanager.yaml.j2
+    src: templates/metrics_prometheus_server/alertmanager.yaml.j2
     dest: "/home/{{ username }}/prometheus/alertmanager.yaml"
     force: yes
 

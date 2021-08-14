@@ -9,7 +9,6 @@
     - vars/settings.yml
     - vars/docker_default.yml
     - vars/metrics_default.yml
-    #- vars/database_default.yml
   roles:
     - ufw
     - user
@@ -17,7 +16,5 @@
     - dart
     - docker
     - docker_registries
-    #- postgres_db
-    #- redis_db
     - docker_clear
     - log

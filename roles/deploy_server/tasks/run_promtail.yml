@@ -1,7 +1,7 @@
 ---
 - name: Install promtail-server-config.yaml file
   template:
-    src: templates/prometheus/promtail-server-config.yaml.j2
+    src: templates/server_deploy/promtail-server-config.yaml.j2
     dest: "/home/{{ username }}/promtail-config.yaml"
     force: yes
 

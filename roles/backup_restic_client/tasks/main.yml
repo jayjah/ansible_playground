@@ -26,7 +26,7 @@
 
     - name: install restic client config to remote host
       template:
-        src: templates/.restic_backup.json.j2
+        src: templates/backup_restic_client/.restic_backup.json.j2
         dest: "/home/{{ username }}/backup/.restic_backup.json"
         force: yes
         #owner: "{{ username }}"

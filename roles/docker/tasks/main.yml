@@ -24,7 +24,7 @@
 
 - name: Generate Docker daemon configuration file
   template:
-    src: templates/daemon.json.j2
+    src: templates/docker/daemon.json.j2
     dest: /etc/docker/daemon.json
     owner: root
     group: root
