@@ -3,6 +3,10 @@
   shell: truncate -s 0 /var/log/*log
   become: true
 
+- name: clear letsencrypt logs
+  shell: truncate -s 0 /var/log/letsencrypt/*log
+  become: true
+
 - name: clear shell history
   shell: cat /dev/null > ~/.bash_history && history -c
   args:
@@ -13,7 +17,3 @@
   file:
     path: "/home/{{ username }}/backup/cronlog.log"
     state: absent
-
-# todo clear docker logs -> need to identify log files with reg expr pattern, log files are present in /etc/docker/
-#- name: clear docker logs
-#  shell: truncate -s 0 /etc/docker/daemon.json*
