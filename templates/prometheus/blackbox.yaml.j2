@@ -5,11 +5,11 @@ modules:
     http:
       method: GET
       valid_http_versions: ["HTTP/1.1", "HTTP/2"]
-      valid_status_codes: [200,302,301,401]
-      no_follow_redirects: false
+      valid_status_codes: [200,302,301]
+      follow_redirects: true
       fail_if_ssl: false
       fail_if_not_ssl: true
       preferred_ip_protocol: "ip4" # defaults to "ip6"
       ip_protocol_fallback: false  # no fallback to "ip6"
       tls_config:
-        insecure_skip_verify: true
+        insecure_skip_verify: false

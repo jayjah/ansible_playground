@@ -17,6 +17,12 @@ scrape_configs:
       job: nginx-{{ inventory_hostname }}
       __path__: /var/log/nginx/*log
 
+  - targets:
+      - localhost
+    labels:
+      job: letsencrypt-{{ inventory_hostname }}
+      __path__: /var/log/letsencrypt/*log
+
 - job_name: containers
   static_configs:
   - targets:
