@@ -31,6 +31,14 @@ scrape_configs:
       job: containers-{{ inventory_hostname }}
       __path__: /var/lib/docker/containers/*/*log
 
+- job_name: backupcron
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: backup-cron-{{ inventory_hostname }}
+      __path__: /home/jayjah/backup/cronlog.log
+
   pipeline_stages:
   - json:
       expressions:
