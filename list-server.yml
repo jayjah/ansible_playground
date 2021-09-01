@@ -31,10 +31,10 @@
         executable: /bin/bash
     - name: show sshkey info
       debug: var=serverlist.stdout_lines
-    - name: get hcloud server infos from private-jayjah.eu
-      hcloud_server_info:
-        name: private-jayjah.eu
-      register: output2
-    - name: show private-jayjah.eu
-      debug:
-        var: output2.hcloud_server_info
+    #- name: get hcloud server infos from private-jayjah.eu
+    #  hcloud_server_info:
+    #    name: private-jayjah.eu
+    #  register: output2
+    #- name: show private-jayjah.eu
+    #  debug:
+    #    var: output2.hcloud_server_info
