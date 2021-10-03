@@ -47,7 +47,7 @@
   service: name=nginx state=restarted
 
 - name: Create letsencrypt certificate
-  shell: "letsencrypt certonly -n --webroot -w /var/www/letsencrypt -m {{ letsencrypt_email }} --agree-tos {{ domains.stdout }}"
+  shell: "letsencrypt certonly -n --webroot -w /var/www/letsencrypt -m {{ letsencrypt_email }} --expand --agree-tos {{ domains.stdout }}"
 
 - name: Generate dhparams
   shell: openssl dhparam -out /etc/nginx/dhparams.pem 2048
