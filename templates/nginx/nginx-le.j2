@@ -41,7 +41,7 @@ server {
     underscores_in_headers on;
 
     location /grafana {
-
+        access_log off;
         proxy_pass http://{{ metrics_grafana_network_ip }};
     }
 
@@ -57,6 +57,7 @@ server {
               add_header 'Access-Control-Max-Age' 1728000;
               add_header 'Content-Type' 'text/plain charset=UTF-8';
               add_header 'Content-Length' 0;
+              access_log off;
               return 204;
             }
 
@@ -66,6 +67,8 @@ server {
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header Upgrade $http_upgrade;
     		proxy_set_header X-Forwarded_Proto $scheme;
+    		proxy_set_header Connection "upgrade";
+            proxy_read_timeout 600s;
     		proxy_redirect off;
     		proxy_pass_request_headers on;
 
