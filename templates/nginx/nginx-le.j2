@@ -19,7 +19,6 @@ server {
     # this is default behaviour of letsencrypt when multiple domains specified
     # in our case its always a list with at least one entry. so just take item at pos 0
     # ssl on; - deprecated(!)
-    # ssl on;
     ssl_certificate         /etc/letsencrypt/live/{{ domain_names[0] }}/fullchain.pem;
     ssl_certificate_key     /etc/letsencrypt/live/{{ domain_names[0] }}/privkey.pem;
     ssl_trusted_certificate /etc/letsencrypt/live/{{ domain_names[0] }}/fullchain.pem;
