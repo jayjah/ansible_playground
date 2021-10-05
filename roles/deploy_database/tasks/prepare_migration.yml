@@ -1,14 +1,14 @@
 ---
 - name: Remove old migrations
   file:
-    path: "backend/migrations"
+    path: "/backend/migrations"
     state: absent
   delegate_to: localhost
   become: true
 
 - name: Create fresh migrations folder
   file:
-    path: "backend/migrations"
+    path: "/backend/migrations"
     state: directory
   delegate_to: localhost
   become: true

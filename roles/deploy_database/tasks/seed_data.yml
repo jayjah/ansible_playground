@@ -24,5 +24,5 @@
   delegate_to: localhost
 
 - name: Seeding data
-  shell: "cd /backend && dart bin/cli.dart dbutil seed -d -c"
+  shell: "cd /backend && dart bin/cli.dart dbutil seed -d -o -c"
   delegate_to: localhost
