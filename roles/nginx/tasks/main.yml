@@ -17,7 +17,7 @@
   apt: name=nginx state=latest
 
 - name: install letsencrypt
-  apt: name=letsencrypt state=latest
+  shell: "snap install certbot --classic"
 
 - name: create letsencrypt directory
   file: name=/var/www/letsencrypt state=directory
@@ -47,7 +47,7 @@
   service: name=nginx state=restarted
 
 - name: Create letsencrypt certificate
-  shell: "letsencrypt certonly -n --webroot -w /var/www/letsencrypt -m {{ letsencrypt_email }} --expand --agree-tos {{ domains.stdout }}"
+  shell: "certbot certonly -n --webroot -w /var/www/letsencrypt -m {{ letsencrypt_email }} --preferred-chain 'ISRG Root X1' --expand --agree-tos {{ domains.stdout }}"
 
 - name: Generate dhparams
   shell: openssl dhparam -out /etc/nginx/dhparams.pem 2048
@@ -67,7 +67,7 @@
   cron:
     name: letsencrypt_renewal
     special_time: hourly
-    job: letsencrypt --renew certonly -n --webroot -w /var/www/letsencrypt -m {{ letsencrypt_email }} --expand --agree-tos {{ domains.stdout }} && systemctl reload nginx
+    job: letsencrypt --renew certonly -n --webroot -w /var/www/letsencrypt -m {{ letsencrypt_email }} --preferred-chain 'ISRG Root X1' --expand --agree-tos {{ domains.stdout }} && systemctl reload nginx
 
 - name: Deny all incoming traffic
   ufw: policy=deny direction=incoming
