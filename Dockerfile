@@ -1,18 +1,21 @@
 # syntax=docker/dockerfile:1.2
 #
 ARG APP_ENV=dev
-ARG DART_LIBRARY_VERSION=2.12.0
-ARG DART_PROD_VERSION=2.10.5
+ARG DART_VERSION=stable
 ARG UBUNTU_VERSION=latest
 
+# :: dart image::
+FROM dart:$DART_VERSION as dartimage
+RUN apt-get -y update && apt-get -y install git make gcc gnupg2 procps curl wget && mkdir /root/home && mkdir /root/home/data
+WORKDIR /root/home
+
 # :: library image ::
-FROM google/dart:$DART_LIBRARY_VERSION as libraryimage
-RUN apt -y update && apt-get -y install git make gcc gnupg2 procps curl wget && mkdir /root/home && mkdir /root/home/data && git clone https://github.com/jayjah/backder.git && cd backder && git checkout master && git pull && pub get && /usr/lib/dart/bin/dart compile exe bin/main.dart -o /root/backup_runtime.sh
+FROM dartimage as libraryimage
+RUN git clone https://github.com/jayjah/backder.git && cd backder && git checkout master && git pull && dart pub get && dart compile exe bin/main.dart -o /root/backup_runtime.sh
 WORKDIR /root/home
 
 # :: prod image ::
-FROM google/dart:$DART_PROD_VERSION as prodimage
-RUN apt-get -y update && apt-get -y install git make gcc zip gnupg2 procps curl wget && mkdir /root/home && mkdir /root/home/data
+FROM dartimage as prodimage
 WORKDIR /root/home
 
 # :: base image ::
@@ -28,15 +31,16 @@ ENV PATH="$PATH:/usr/lib/dart/bin:$PATH:/root/.pub-cache/bin"
 RUN mkdir -p -m 0700 /root/.ssh && ssh-keyscan github.com >> /root/.ssh/known_hosts && ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
 
 # :: prod build ::
-FROM pre-prod-build as prod-sources
+FROM pre-prod-build as prod-build
 WORKDIR /
 # get server sources -> ssh access needed here
-RUN --mount=type=ssh git clone git@gitlab.com:movementfamily/dart_backend.git && cd dart_backend && git checkout dev && git pull --recurse-submodules && git submodule update --init && cd /dart_backend/dependencies/aqueduct && pub get && cd ../.. && pub get
-
-FROM prod-sources as prod-build
-WORKDIR /
-# install aqueduct
-RUN mv -T dart_backend backend && cd backend/dependencies/aqueduct && pub get --no-precompile && cd ../..  && pub get --no-precompile && pub global activate --source path dependencies/aqueduct && cd /backend/dependencies/aqueduct && pub get
+RUN mkdir dependencies \
+    && git clone https://github.com/jayjah/aqueduct.git dependencies/ \
+    && cd dependencies \
+    && git checkout override_with_git \
+    && git pull \
+    && dart pub get \
+    && dart pub global activate --source path .
 
 # :: dev build ::
 FROM baseimage as dev-build
