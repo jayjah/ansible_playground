@@ -43,11 +43,11 @@
     creates: "/etc/letsencrypt/live/{{ item }}"
   loop: "{{ domain_names }}"
 
-- name: Reload nginx to activate letsencrypt site
-  service: name=nginx state=restarted
-
 - name: Create letsencrypt certificate
   shell: "certbot certonly -n --webroot -w /var/www/letsencrypt -m {{ letsencrypt_email }} --preferred-chain 'ISRG Root X1' --expand --agree-tos {{ domains.stdout }}"
+
+- name: Reload nginx to activate letsencrypt site
+  service: name=nginx state=restarted
 
 - name: Generate dhparams
   shell: openssl dhparam -out /etc/nginx/dhparams.pem 2048
