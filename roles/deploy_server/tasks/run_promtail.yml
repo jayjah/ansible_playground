@@ -22,6 +22,8 @@
       - /home/{{ username }}/promtail-config.yaml:/mnt/config/promtail-config.yaml:ro
       - /var/lib/docker/:/var/lib/docker:ro
       - /var/log/nginx/:/var/log/nginx/:ro
+      - /var/log/letsencrypt/:/var/log/letsencrypt/:ro
+      - /home/{{ username }}/backup/:/var/log/backup/:ro
     command:
       - "--config.file=/mnt/config/promtail-config.yaml"
     output_logs: yes
