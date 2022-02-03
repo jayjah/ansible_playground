@@ -1,2 +1,2 @@
 #! /bin/bash
-docker build --tag jayjah/ansible --build-arg APP_ENV=dev .
+docker buildx build --platform linux/arm64 --tag jayjah/ansible-prod --no-cache .
