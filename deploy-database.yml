@@ -7,11 +7,6 @@
   vars_files:
     - vars/default.yml
     - vars/settings.yml
-    - vars/deploy_configs/server_deploy_default.yml
-    - vars/deploy_configs/movementfam_default.yml
     - vars/database_default.yml
   roles:
     - postgres_db
-    - deploy_database
-    - docker_clear
-    - log
