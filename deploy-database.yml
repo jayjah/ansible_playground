@@ -1,5 +1,5 @@
 ---
-- name: Deploy server
+- name: Deploy database
   hosts: backendservers
   gather_facts: true
   user: root

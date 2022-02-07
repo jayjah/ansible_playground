@@ -15,7 +15,7 @@
   include: copy_public_files.yml
   when: copy_public_files == True
 
-- name: Remove env file
-  file:
-    state: absent
-    path: "/home/{{ username }}/backend/keys_config.env"
+#- name: Remove env file
+#  file:
+#    state: absent
+#    path: "/home/{{ username }}/backend/keys_config.env"

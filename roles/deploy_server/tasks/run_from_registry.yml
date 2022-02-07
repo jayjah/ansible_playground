@@ -11,7 +11,7 @@
     volumes:
       - /home/{{ username }}/backend/public:/app/public:rw
     env_file: "/home/{{ username }}/backend/keys_config.env"
-    #user: "{{ username }}:{{ username_uid }}"
+    user: "1000:901"
     output_logs: yes
     interactive: yes
     tty: yes
