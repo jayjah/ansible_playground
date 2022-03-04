@@ -1,19 +1,19 @@
 ---
-- name: clear logs
-  shell: truncate -s 0 /var/log/*log
-  become: true
-
-- name: clear letsencrypt logs
-  shell: truncate -s 0 /var/log/letsencrypt/*log
-  become: true
-
 - name: clear shell history
   shell: cat /dev/null > ~/.bash_history && history -c
   args:
     executable: /bin/bash
   become: true
 
-- name: clear cronjob log
+- name: Registering all compressed files to delete them
+  find:
+    paths: /var/log
+    patterns: "*.gz"
+    recurse: yes
+  register: files_to_delete
+
+- name: Remove all registered compressed files
   file:
-    path: "/home/{{ username }}/backup/cronlog.log"
+    path: "{{ item.path }}"
     state: absent
+  with_items: "{{ files_to_delete.files }}"
