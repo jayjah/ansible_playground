@@ -37,7 +37,7 @@ scrape_configs:
       - localhost
     labels:
       job: backup-cron-{{ inventory_hostname }}
-      __path__: /var/log/backup/*log
+      __path__: /home/{{ username }}/backup/cronlog.log
 
   pipeline_stages:
   - json:
