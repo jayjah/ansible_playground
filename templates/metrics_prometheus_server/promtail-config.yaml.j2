@@ -10,6 +10,14 @@ scrape_configs:
       job: logs-metrics
       __path__: /var/log/*log
 
+- job_name: letsencrypt-logs
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: letsencrypt-logs
+      __path__: /var/log/letsencrypt/*log
+
 - job_name: containers
   static_configs:
   - targets:
