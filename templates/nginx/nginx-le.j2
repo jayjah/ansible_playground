@@ -41,6 +41,7 @@ server {
 
     location /grafana {
         access_log off;
+        proxy_set_header Host $http_host;
         proxy_pass http://{{ metrics_grafana_network_ip }};
     }
 
