@@ -31,13 +31,13 @@ scrape_configs:
       job: containers-{{ inventory_hostname }}
       __path__: /var/lib/docker/containers/*/*log
 
-- job_name: backupcron
+- job_name: backup-cron-logs
   static_configs:
   - targets:
       - localhost
     labels:
-      job: backup-cron-{{ inventory_hostname }}
-      __path__: /home/{{ username }}/backup/cronlog.log
+      job: backup-cron-logs-{{ inventory_hostname }}
+      __path__: /var/log/backup/*log
 
   pipeline_stages:
   - json:

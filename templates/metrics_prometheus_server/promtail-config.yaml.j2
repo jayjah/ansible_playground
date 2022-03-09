@@ -10,6 +10,14 @@ scrape_configs:
       job: logs-metrics
       __path__: /var/log/*log
 
+- job_name: backup-cron-logs
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: backup-cron-logs-{{ inventory_hostname }}
+      __path__: /var/log/backup/*log
+
 - job_name: letsencrypt-logs
   static_configs:
   - targets:

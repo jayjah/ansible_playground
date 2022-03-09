@@ -37,6 +37,7 @@ services:
     volumes:
       - ./promtail-config.yaml:/mnt/config/promtail-config.yaml:ro
       - /var/lib/docker/:/var/lib/docker:ro
+      - /home/{{ username }}/backup/:/var/log/backup/:ro
     depends_on:
       - prometheus
 
