@@ -67,7 +67,7 @@
   cron:
     name: letsencrypt_renewal
     special_time: hourly
-    job: letsencrypt --renew certonly -n --webroot -w /var/www/letsencrypt -m {{ letsencrypt_email }} --preferred-chain 'ISRG Root X1' --expand --agree-tos {{ domains.stdout }} && systemctl reload nginx
+    job: letsencrypt --renew certonly -n --webroot -w /var/www/letsencrypt -m {{ letsencrypt_email }} --preferred-chain 'ISRG Root X1' --expand --agree-tos {{ domains.stdout }} && systemctl restart nginx
 
 - name: Deny all incoming traffic
   ufw: policy=deny direction=incoming
