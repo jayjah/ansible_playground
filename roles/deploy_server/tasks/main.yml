@@ -1,6 +1,7 @@
 ---
 - name: Create relevant directories
   include: create_directories_files.yml
+  when: copy_public_files == True
 
 - name: Remove old containers
   include: clear_stop_running_server.yml
