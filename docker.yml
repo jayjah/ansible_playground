@@ -1,6 +1,6 @@
 ---
 - name: Docker test
-  hosts: servers
+  hosts: docker
   gather_facts: false
   become: true
   become_user: root

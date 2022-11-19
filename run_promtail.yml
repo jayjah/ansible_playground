@@ -1,0 +1,17 @@
+---
+- name: Run promtail
+  hosts: promtail
+  gather_facts: true
+  user: root
+  vars_files:
+    - vars/default.yml
+    - vars/settings.yml
+    - vars/deploy_configs/server_deploy_default.yml
+    - vars/deploy_configs/movementfam_default.yml
+    - vars/database_default.yml
+    - vars/metrics_default.yml
+    - vars/docker_default.yml
+  roles:
+    - promtail
+    - docker_clear
+    - log
