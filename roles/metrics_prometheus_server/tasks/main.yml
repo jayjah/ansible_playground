@@ -59,6 +59,16 @@
   loop:
     - "{{ default_server_network_ip_range }}"
 
+- name: Allow all access from subnet network to prometheus
+  ufw:
+    rule: allow
+    direction: in
+    proto: any
+    src: '{{ item }}'
+    to_port: "{{ prometheus_port }}"
+  loop:
+    - "{{ default_server_network_ip_range }}"
+
 #- name: Allow incoming access vom localhost
 #  ufw:
 #    rule: allow
