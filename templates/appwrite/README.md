@@ -1,1 +1,0 @@
-more infos about [appwrite](https://gist.github.com/eldadfux/977869ff6bdd7312adfd4e629ee15cc5)

@@ -1,0 +1,10 @@
+---
+- name: Install Nginx and Supabase
+  hosts: supabase
+  become: true
+  become_user: root
+  vars_files:
+    - vars/default.yml
+    - vars/supabase.yml
+  roles:
+    - supabase

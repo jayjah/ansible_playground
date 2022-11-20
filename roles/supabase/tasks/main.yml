@@ -1,0 +1,40 @@
+---
+- name: Create nginx password
+  htpasswd:
+    path: /etc/httpd/.htpasswd
+    name: "{{ nginx_name }}"
+    password: "{{ nginx_password }}"
+    group: "{{ username_uid }}"
+    mode: 0640
+  become: true
+
+- name: Create nginx server
+  include: nginx.yml
+
+- name: Clone Supabase repository
+  git:
+    repo: https://github.com/supabase/supabase
+    dest: "/home/{{ username }}/supabase/"
+    clone: yes
+    update: yes
+    depth: 1
+
+- name: Create Supabase env file
+  template:
+    src: templates/supabase/env.j2
+    dest: "/home/{{ username }}/supabase/docker/.env"
+    owner: "{{ username }}"
+    group: "{{ username_uid }}"
+    mode: 0700
+    force: yes
+
+- name: Stop Supabase docker instance
+  docker_compose:
+    project_src: "/home/{{ username }}/supabase/docker/"
+    remove_images: all
+    state: absent
+
+- name: Run Supabase docker instance
+  docker_compose:
+    project_src: "/home/{{ username }}/supabase/docker/"
+    state: present

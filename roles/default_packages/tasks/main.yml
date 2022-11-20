@@ -1,7 +1,7 @@
 ---
 - name: Install and update required packages
   apt:  update_cache=yes name={{ item }} state=latest
-  loop: [ 'aptitude', 'git-core', 'git', 'ufw', 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools', 'apache2-utils', 'snap', 'snapd', 'python-simplejson', 'zip', 'unzip', 'tmux' ]
+  loop: [ 'aptitude', 'git-core', 'git', 'ufw', 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools', 'apache2-utils', 'snap', 'snapd', 'python3-simplejson', 'zip', 'unzip', 'tmux' ]
 
 - name: Install python packages
   pip: name={{ item }}
