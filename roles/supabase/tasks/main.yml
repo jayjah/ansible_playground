@@ -4,7 +4,8 @@
     path: /etc/httpd/.htpasswd
     name: "{{ nginx_name }}"
     password: "{{ nginx_password }}"
-    group: "{{ username_uid }}"
+    group: "www-data"
+    owner: "root"
     mode: 0640
   become: true
 

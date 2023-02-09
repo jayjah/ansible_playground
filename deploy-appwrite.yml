@@ -1,0 +1,17 @@
+---
+- name: Deploy server
+  hosts: appwriteservers
+  gather_facts: true
+  user: "{{ username }}"
+  vars_files:
+    - vars/appwrite_default.yml
+    - vars/default.yml
+    - vars/settings.yml
+    - vars/deploy_configs/server_deploy_default.yml
+    - vars/deploy_configs/movementfam_default.yml
+    - vars/database_default.yml
+    - vars/metrics_default.yml
+  roles:
+    - deploy_appwrite
+    - docker_clear
+    - log

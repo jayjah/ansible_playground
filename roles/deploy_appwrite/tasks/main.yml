@@ -1,0 +1,31 @@
+---
+- name: Ensure appwrite directory exist
+  file:
+    state: directory
+    path: "/home/{{ username }}/appwrite"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0755
+
+- name: Install appwrite env file
+  template:
+    src: templates/appwrite/.env.j2
+    dest: "/home/{{ username }}/appwrite/.env"
+    force: yes
+
+- name: Install docker-compose file
+  template:
+    src: templates/appwrite/docker-compose.yaml.j2
+    dest: "/home/{{ username }}/appwrite/docker-compose.yaml"
+    force: yes
+
+- name: Ensure appwrite is not running
+  docker_compose:
+    project_src: "/home/{{ username }}/appwrite/"
+    remove_images: all
+    state: absent
+
+- name: Create appwrite instance
+  docker_compose:
+    project_src: "/home/{{ username }}/appwrite/"
+    state: present
