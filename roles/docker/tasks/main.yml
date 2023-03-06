@@ -12,7 +12,7 @@
 - name: Install docker
   apt: name={{ item }} state=latest update_cache=yes autoremove=true autoclean=true
   become: true
-  loop: [ 'docker-ce', 'docker-ce-cli', 'containerd.io', 'containerd', 'docker-compose', 'docker.io' ]
+  loop: [ 'docker-ce', 'docker-ce-cli', 'containerd.io', 'containerd', 'docker-compose', 'docker.io', 'docker-buildx-plugin', 'docker-compose-plugin' ]
 
 - name: Ensure /etc/docker directory exists
   file:
