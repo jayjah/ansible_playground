@@ -134,7 +134,7 @@ groups:
 
   - alert: MovementFamDatabaseContainerKilled
     expr: absent(container_memory_usage_bytes{name="backend-db-movementfam"})
-    for: 15s
+    for: 1m
     labels:
       severity: critical
     annotations:
@@ -143,7 +143,7 @@ groups:
 
   - alert: MovementFamServerContainerKilled
     expr: absent(container_memory_usage_bytes{name="backend-server-movementfam"})
-    for: 15s
+    for: 1m
     labels:
       severity: critical
     annotations:
