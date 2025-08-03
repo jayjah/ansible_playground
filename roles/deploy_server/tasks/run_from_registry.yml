@@ -2,7 +2,7 @@
 - name: Run server docker image from registry
   docker_container:
     name: "{{ server_container_name }}-{{ name }}"
-    image: "{{ server_registry_url }}{{ server_registry_image_name }}"
+    image: "{{ server_registry_image_name }}"
     recreate: true
     restart: false
     restart_policy: unless-stopped
