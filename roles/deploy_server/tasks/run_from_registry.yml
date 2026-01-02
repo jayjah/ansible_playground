@@ -8,10 +8,11 @@
     restart_policy: unless-stopped
     published_ports:
       - "{{ server_port }}:{{ server_port }}"
+      - "8111:8111"
     volumes:
-      - /home/{{ username }}/backend/public:/app/public:rw
+      - /home/{{ username }}/backend/public:/home/jayjah/app/public:rw
     env_file: "/home/{{ username }}/backend/keys_config.env"
-    user: "1000:901"
+    user: "901:0"
     output_logs: yes
     interactive: yes
     tty: yes

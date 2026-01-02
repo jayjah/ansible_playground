@@ -9,8 +9,8 @@
 - name: Run server container
   include: run_from_registry.yml
 
-- name: Run promtail container
-  include: run_promtail.yml
+#- name: Run promtail container
+#  include: run_promtail.yml
 
 - name: Copy public static files
   include: copy_public_files.yml
